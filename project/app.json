@@ -18,7 +18,16 @@
       "supportsTablet": true
     },
     "androidStatusBar":{
-      "backgroundColor": "#FF0000"
+      "backgroundColor": "ffffff"
+    },
+    "android":{
+      "package": "com.fededri.jobs",
+      "config":{
+        "googleMaps":{
+          "apiKey":"AIzaSyAl4hBL_z324uPtrjRJl80etN3A5yM-i_0"
+        }
+      }
     }
+
   }
 }
