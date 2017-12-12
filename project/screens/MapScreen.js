@@ -1,14 +1,18 @@
 import React,{Component} from 'react';
-import {View, Text, ActivityIndicator,Platform} from 'react-native';
+import {View, Text, ActivityIndicator,Platform,Dimensions} from 'react-native';
 import {MapView} from 'expo';
 import {Spinner} from '../components/common/Spinner'
 import {connect} from 'react-redux';
 import * as actions from '../actions';
-import {Button, Icon} from 'react-native-elements';
+import {Button, Icon, SearchBar} from 'react-native-elements';
+import EditText from '../components/common/EditText'
 
 
+const SCREEN_WIDTH = Dimensions.get('window').width;
 
 class MapScreen extends Component {
+
+    state = {search: ''}
 
     static navigationOptions = { 
         title: 'Map',
@@ -51,6 +55,17 @@ class MapScreen extends Component {
         });
     }
 
+
+    onSearchTextChange = (text) => {
+        this.setState({search:text});
+    }
+
+
+    onSearchClearText = () => {
+        console.log('clear');
+        this.setState({search:''});
+    }
+
     render(){
         if(!this.state.mapLoaded){
             return(
@@ -60,12 +75,26 @@ class MapScreen extends Component {
         }
 
         return(
-            <View style={{flex:1}}>
+            <View style={{flex:1, flexDirection:'column'}}>
+                <View style={styles.searchBarContainerStyle}>
+                    <EditText
+                    onChangeText={(text) => this.setState({search:text})}
+                    placeholder="Search for a place"
+                    iconName="search"
+                    style={{height:120}}
+                    showClearIcon= {true}
+                    onClearText={() => this.setState({search: ''})}
+                    value={this.state.search}
+                    ref={et => this.editText  = et}
+                    />
+                </View>
+
                 <MapView
                 onRegionChangeComplete={this.onRegionChangeComplete}
                 region= {this.state.region}
                 style={{flex:1}}
                 />
+
 
                 <View
                 style={styles.buttonContainer}
@@ -92,6 +121,10 @@ const styles={
         right: 20,
         justifyContent:'center'
     },
+
+    searchBarContainerStyle:{
+        width: SCREEN_WIDTH
+    }
 
    
 }

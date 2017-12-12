@@ -18,7 +18,7 @@
       "supportsTablet": true
     },
     "androidStatusBar":{
-      "backgroundColor": "ffffff"
+      "backgroundColor": "#3466cb"
     },
     "android":{
       "package": "com.fededri.jobs",

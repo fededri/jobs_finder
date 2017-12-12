@@ -16,7 +16,7 @@ export default class App extends React.Component {
 
 
  componentDidMount(){
-   registerForNotifications();
+   //registerForNotifications();
    Notifications.addListener((notification)=> {
      const {data: {text}} = notification;
      console.log(`notificacion recibida: ${text}`);
