@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Platform } from 'react-native';
+import { StyleSheet, Text, View, Platform,Alert } from 'react-native';
 import {TabNavigator, StackNavigator} from 'react-navigation';
 import AuthScreen from './screens/AuthScreen';
 import WelcomeScreen from './screens/WelcomeScreen';
@@ -8,11 +8,31 @@ import DeckScreen from './screens/DeckScreen';
 import SettingsScreen from './screens/SettingsScreen';
 import ReviewScreen from './screens/ReviewScreen';
 import {Provider} from 'react-redux';
-import store from './store';
-
+import configureStore from './store';
+import { PersistGate } from 'redux-persist/es/integration/react';
+import registerForNotifications from './services/push_notifications';
+import Expo, {Notifications} from 'expo';
 export default class App extends React.Component {
-  render() {
 
+
+ componentDidMount(){
+   registerForNotifications();
+   Notifications.addListener((notification)=> {
+     const {data: {text}} = notification;
+     console.log(`notificacion recibida: ${text}`);
+     if(origin === 'received' && text ){
+      Alert.alert(
+        'New  Notification!',
+        text,
+        [{text: 'Ok.'}]
+      );
+     }
+     
+   });
+ }
+
+  render() {
+    const {persistor, store} = configureStore();
     const MainNavigator = TabNavigator(
       {
       welcome: { screen: WelcomeScreen},
@@ -30,13 +50,21 @@ export default class App extends React.Component {
         },
         {
           tabBarPosition: 'bottom',
-          lazy: true
+          lazy: true,
+          swipeEnabled:false,
+          tabBarOptions:{
+            labelStyle: {fontSize: 12} ,
+            showIcon: Platform.OS === 'ios',
+            showLabel:  true,
+          
+          }
         }
                             )
       }
     },
     {
     tabBarPosition: 'bottom',
+    backBehavior: 'none',
     lazy: true,
     swipeEnabled: false,
     navigationOptions :{
@@ -49,9 +77,11 @@ export default class App extends React.Component {
       <Provider
        store = {store}
        >
-          <View style={styles.container}>
-        <MainNavigator/>
-      </View>
+         <PersistGate persistor={persistor}>
+         <View style={styles.container}>
+           <MainNavigator />
+         </View>
+         </PersistGate>
       </Provider>
     
     );

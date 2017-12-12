@@ -3,11 +3,19 @@ import {View, Text, Platform} from 'react-native';
 import { connect } from 'react-redux';
 import Swipe from '../components/Swipe';
 import {MapView} from 'expo';
-import {Card, Button} from 'react-native-elements';
+import {Card, Button, Icon} from 'react-native-elements';
 import * as actions from '../actions';
 
 class DeckScreen extends Component {
     
+   
+    static navigationOptions = { 
+        tabBarLabel: 'Jobs',
+        tabBarIcon: ({tintColor}) => {
+            return <Icon name="description" size={30} color={tintColor} iconStyle={{width:30, height: 30}} />
+        }    
+    }
+
     renderCard(job){
 
         initialRegion={
@@ -48,12 +56,20 @@ class DeckScreen extends Component {
         console.log('job liked');
     }
 
-    renderNoMoreCards(){
+    renderNoMoreCards = () => {
         return(
             <Card
             title="No more jobs!"
             >
+            <Button
+            title="Back to map"
+            large
+            icon={{name:'my-location'}}
+            backgroundColor="#03A9F4"
+            onPress={() => this.props.navigation.navigate('map')}
+            >
 
+            </Button>
             </Card>
         );
     }

@@ -4,12 +4,20 @@ import {MapView} from 'expo';
 import {Spinner} from '../components/common/Spinner'
 import {connect} from 'react-redux';
 import * as actions from '../actions';
-import {Button} from 'react-native-elements';
+import {Button, Icon} from 'react-native-elements';
 
 
 
 class MapScreen extends Component {
 
+    static navigationOptions = { 
+        title: 'Map',
+        tabBarLabel: 'Map',
+        tabBarIcon: ({tintColor}) => {
+            return <Icon name="my-location" size={30} color={tintColor}  iconStyle={{width:30, height: 30, justifyContent:'center'}}/>
+        },
+        
+    }
 
     state = {
         mapLoaded: false,
