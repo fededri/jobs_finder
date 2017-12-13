@@ -12,7 +12,6 @@ import configureStore from './store';
 import { PersistGate } from 'redux-persist/es/integration/react';
 import registerForNotifications from './services/push_notifications';
 import Expo, {Notifications} from 'expo';
-import {getLocationUpdatesAsync} from './geolocation';
 
 export const {persistor,store} = configureStore();
 

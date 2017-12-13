@@ -64,7 +64,8 @@ class MapScreen extends Component {
             }else {
                 Location.watchPositionAsync(
                     {
-                        enableHighAccuracy: true,                
+                        enableHighAccuracy: true,     
+                        timeInterval: 1           
                     },
                     (response) => {
                     console.log('location updated');                        
