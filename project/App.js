@@ -12,6 +12,10 @@ import configureStore from './store';
 import { PersistGate } from 'redux-persist/es/integration/react';
 import registerForNotifications from './services/push_notifications';
 import Expo, {Notifications} from 'expo';
+import {getLocationUpdatesAsync} from './geolocation';
+
+export const {persistor,store} = configureStore();
+
 export default class App extends React.Component {
 
 
@@ -32,7 +36,7 @@ export default class App extends React.Component {
  }
 
   render() {
-    const {persistor, store} = configureStore();
+    
     const MainNavigator = TabNavigator(
       {
       welcome: { screen: WelcomeScreen},

@@ -11,9 +11,6 @@ import {Icon} from 'react-native-elements';
 
 class EditText extends Component {
 
-
-    state = {text: ''}
-
     constructor(props){
         super(props);
     }

@@ -1,19 +1,17 @@
 import React,{Component} from 'react';
 import {View, Text, ActivityIndicator,Platform,Dimensions} from 'react-native';
-import {MapView} from 'expo';
+import {MapView,Location, Permissions} from 'expo';
 import {Spinner} from '../components/common/Spinner'
 import {connect} from 'react-redux';
 import * as actions from '../actions';
 import {Button, Icon, SearchBar} from 'react-native-elements';
 import EditText from '../components/common/EditText'
 
-
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 class MapScreen extends Component {
 
-    state = {search: ''}
-
+ 
     static navigationOptions = { 
         title: 'Map',
         tabBarLabel: 'Map',
@@ -26,19 +24,60 @@ class MapScreen extends Component {
     state = {
         mapLoaded: false,
         loading: false,
+        search: '',
         region: {
-            longitude: -122,
-            latitude: 37,
+            longitude: -58,
+            latitude: -34,
             longitudeDelta: 0.04,
             latitudeDelta: 0.09
         }
     }
 
+    
+    componentWillReceiveProps(nextProps){
+        if(!this.props.location.latitude){
+            this.setState({region:{
+                latitude: nextProps.location.latitude,
+                longitude: nextProps.location.longitude,
+                longitudeDelta: 0.04,
+                latitudeDelta: 0.09
+            }})
+        }
 
-    componentDidMount(){
+    }
+
+    componentDidMount()
+    {
         this.setState({mapLoaded: true})
+        this.getLocationUpdatesAsync();
         
-}
+    }
+
+    getLocationUpdatesAsync = async () => {
+        
+            let {status} = await Permissions.askAsync(Permissions.LOCATION);
+        
+            if(status !== 'granted'){
+                //call an action creator and set state to permission denied
+                console.log('dispathing action permission denied');
+                this.props.deniedLocationPermission();
+            }else {
+                Location.watchPositionAsync(
+                    {
+                        enableHighAccuracy: true,                
+                    },
+                    (response) => {
+                    console.log('location updated');                        
+                           this.props.newLocation({
+                           latitude: response.coords.latitude,
+                            longitude: response.coords.longitude })
+                        
+                    }
+                );
+                //set location state
+            }
+        
+        }
 
 
     onRegionChangeComplete = (region) => {
@@ -49,6 +88,7 @@ class MapScreen extends Component {
 
     onButtonPress = () => {
         this.setState({loading:true})
+
         this.props.fetchJobs(this.state.region, () => {
             this.setState({loading:false})
             this.props.navigation.navigate('deck');
@@ -130,4 +170,13 @@ const styles={
 }
 
 
-export default connect(null,actions)(MapScreen);
+function mapStateToProps(state){
+    console.log('mapping state to props in MapScreen');
+    return {
+        location: state.location.location,
+        error: state.location.error
+    }
+}
+
+
+export default connect(mapStateToProps,actions)(MapScreen);
