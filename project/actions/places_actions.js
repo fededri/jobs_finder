@@ -5,7 +5,7 @@ import {
 }from './types';
 
 
-const API_KEY = '';
+const API_KEY = 'AIzaSyC4OUI7KsHfC9u65nA3PQcUlmyjORUz9bc';
 
 
 const PLACES_QUERY_PARAMS = {
@@ -23,10 +23,14 @@ const PLACES_QUERY_PARAMS = {
  */
 const ROOT_PLACES_API= 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?';
 
+
+const ROOT_PLACES_DETAIL_API = 'https://maps.googleapis.com/maps/api/place/details/json?';
+
 export const requestPlaces =  (region) => {
 
     return async (dispatch) => {
         let url = buildPlacesUrl(region);
+        console.log('fetching url...',url);
         let {data} = await axios.get(url);
         console.log("obtained places: ", data);
         dispatch({type: NEW_PLACES, payload: data});
