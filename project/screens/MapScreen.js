@@ -35,13 +35,18 @@ class MapScreen extends Component {
 
     
     componentWillReceiveProps(nextProps){
+        //only refresh region first time
         if(!this.props.location.latitude){
-            this.setState({region:{
+         const   newRegion =  {
                 latitude: nextProps.location.latitude,
                 longitude: nextProps.location.longitude,
                 longitudeDelta: 0.04,
                 latitudeDelta: 0.09
-            }})
+            }
+            this.map.animateToRegion(newRegion,1000);
+            this.setState({region: newRegion});
+            //stop location updates
+            
         }
 
     }
@@ -62,10 +67,10 @@ class MapScreen extends Component {
                 console.log('dispathing action permission denied');
                 this.props.deniedLocationPermission();
             }else {
-                Location.watchPositionAsync(
-                    {
-                        enableHighAccuracy: true,     
-                        timeInterval: 1           
+             this.subscription =  Location.watchPositionAsync(
+                    {                         
+                        timeInterval: 1,
+                        distanceInterval: 0           
                     },
                     (response) => {
                     console.log('location updated');                        
@@ -81,6 +86,9 @@ class MapScreen extends Component {
         }
 
 
+
+
+
     onRegionChangeComplete = (region) => {
         console.log(region);
         this.setState({region});
@@ -89,11 +97,12 @@ class MapScreen extends Component {
 
     onButtonPress = () => {
         this.setState({loading:true})
-
-        this.props.fetchJobs(this.state.region, () => {
+        console.log('fetching data for region:',this.state.region);
+        this.props.requestPlaces(this.state.region);
+      /*  this.props.fetchJobs(this.state.region, () => {
             this.setState({loading:false})
             this.props.navigation.navigate('deck');
-        });
+        });*/
     }
 
 
@@ -134,6 +143,8 @@ class MapScreen extends Component {
                 onRegionChangeComplete={this.onRegionChangeComplete}
                 region= {this.state.region}
                 style={{flex:1}}
+                showsUserLocation={true}
+                ref={(map)=> this.map = map}
                 />
 
 
