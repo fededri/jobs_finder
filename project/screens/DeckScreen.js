@@ -1,5 +1,5 @@
 import React,{Component} from 'react';
-import {View, Text, Platform} from 'react-native';
+import {View, Text, Platform,Image} from 'react-native';
 import { connect } from 'react-redux';
 import Swipe from '../components/Swipe';
 import {MapView} from 'expo';
@@ -16,35 +16,33 @@ class DeckScreen extends Component {
         }    
     }
 
-    renderCard(job){
-
+    renderCard(place){
+        console.log('rendering place',place);
         initialRegion={
-            longitude: job.longitude,
-            latitude: job.latitude,
+            longitude: place.geometry.location.lat,
+            latitude: place.geometry.location.lng,
             longitudeDelta: 0.045,
             latitudeDelta: 0.02
         };
         return(
             <Card
-            title={job.jobtitle}>
+            title={place.name}>
             <View style={{height: 300}}>
-            <MapView
-            scrollEnabled={false}
+
+            <Image
             style={{flex:1}}
-            cacheEnabled={Platform.OS === 'android=' ? true: false}
-            initialRegion={initialRegion}
-            > 
-            
-            </MapView>
+            source={{uri: place.photo_url}}
+            />            
+         
             </View>
             <View style={styles.detailWrapper}>
-                <Text> {job.company} </Text>
-                <Text> {job.formattedRelativeTime} </Text>
+                <Text> {place.vicinity} </Text>
+                <Text> {place.international_phone_number} </Text>
             </View>
 
 
             <Text>
-            {job.snippet.replace(/<b>/g,'').replace(/<\/b/g,'')};    
+            Some Other stuff    
             </Text>
 
             </Card>
@@ -53,13 +51,13 @@ class DeckScreen extends Component {
 
 
     likeJob = () => {
-        console.log('job liked');
+        console.log('place liked');
     }
 
     renderNoMoreCards = () => {
         return(
             <Card
-            title="No more jobs!"
+            title="No more places!!"
             >
             <Button
             title="Back to map"
@@ -80,15 +78,14 @@ class DeckScreen extends Component {
     }
 
     render(){
-        console.log(`jobs: ${this.props.jobs}`);
         return(
             <View>
                <Swipe
-               data={this.props.jobs}
+               data={this.props.places}
                renderCard={this.renderCard}
                renderNoMoreCards={this.renderNoMoreCards}
                onSwipeRight = {job => this.props.likeJob(job)}
-               keyProp="jobkey"
+               keyProp="place_id"
                />
             </View>
         );
@@ -104,7 +101,9 @@ const styles = {
 }
 
 function mapStateToProps(state){
-    return {jobs: state.jobs.results}
+    return {
+        places: state.placesData.places
+    }
 }
 
 

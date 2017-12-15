@@ -11,6 +11,12 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 
 class MapScreen extends Component {
 
+    initialRegion = { 
+         longitude: -58,
+        latitude: -34,
+        longitudeDelta: 0.04,
+        latitudeDelta: 0.09
+    }
  
     static navigationOptions = { 
         title: 'Map',
@@ -90,7 +96,6 @@ class MapScreen extends Component {
 
 
     onRegionChangeComplete = (region) => {
-        console.log(region);
         this.setState({region});
     }
 
@@ -98,7 +103,10 @@ class MapScreen extends Component {
     onButtonPress = () => {
         this.setState({loading:true})
         console.log('fetching data for region:',this.state.region);
-        this.props.requestPlaces(this.state.region);
+        this.props.requestPlaces(this.state.region, () => {
+            this.setState({loading: false});
+            this.props.navigation.navigate('deck');
+        });
       /*  this.props.fetchJobs(this.state.region, () => {
             this.setState({loading:false})
             this.props.navigation.navigate('deck');
@@ -140,6 +148,7 @@ class MapScreen extends Component {
                 </View>
 
                 <MapView
+                initialRegion={this.initialRegion}
                 onRegionChangeComplete={this.onRegionChangeComplete}
                 region= {this.state.region}
                 style={{flex:1}}

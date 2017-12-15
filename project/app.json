@@ -1,14 +1,14 @@
 {
   "expo": {
     "name": "project",
-    "description": "An empty new project",
+    "description": "Find what you want where you want!",
     "slug": "project",
     "privacy": "public",
     "sdkVersion": "23.0.0",
     "version": "1.0.0",
     "orientation": "portrait",
     "primaryColor": "#cccccc",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/ic_launcher.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -21,12 +21,15 @@
       "backgroundColor": "#3466cb"
     },
     "android":{
-      "package": "com.fededri.jobs",
+      "package": "com.fededri.fiper",
       "config":{
         "googleMaps":{
           "apiKey":"AIzaSyAl4hBL_z324uPtrjRJl80etN3A5yM-i_0"
         }
       }
+    },
+    "loading":{
+      "exponentIconColor": "blue"
     }
 
   }
