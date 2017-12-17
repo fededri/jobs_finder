@@ -73,23 +73,34 @@ class MapScreen extends Component {
                 console.log('dispathing action permission denied');
                 this.props.deniedLocationPermission();
             }else {
-             this.subscription =  Location.watchPositionAsync(
-                    {                         
-                        timeInterval: 1,
-                        distanceInterval: 0           
-                    },
-                    (response) => {
-                    console.log('location updated');                        
-                           this.props.newLocation({
-                           latitude: response.coords.latitude,
-                            longitude: response.coords.longitude })
-                        
-                    }
-                );
-                //set location state
+                const gpsAvailable = await this.isLocationProviderAvailable();
+            if(gpsAvailable){
+                console.log('subscription');
+                this.subscription =  Location.watchPositionAsync(
+                        {                         
+                            timeInterval: 1,
+                            distanceInterval: 0           
+                        },
+                        (response) => {
+                        console.log('location updated');                        
+                            this.props.newLocation({
+                            latitude: response.coords.latitude,
+                                longitude: response.coords.longitude })
+                            
+                        }
+                    );
+            }
+          
             }
         
         }
+
+    isLocationProviderAvailable = async () => { 
+        let {locationServicesEnabled} =  await Location.getProviderStatusAsync();
+        console.log('location provider:',locationServicesEnabled);
+        return locationServicesEnabled;
+
+    }
 
 
 

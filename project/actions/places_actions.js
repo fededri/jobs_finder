@@ -24,8 +24,7 @@ const PLACE_DETAIL_PARAMS = {
 const PLACE_PHOTOS_PARAMS = {
     key: API_KEY,
     photoreference: '',
-    maxwidth: 1000,
-    maxheight: 1000
+    maxheight: 300
 }
 
 /**
@@ -49,7 +48,7 @@ const ROOT_PLACES_DETAIL_API = 'https://maps.googleapis.com/maps/api/place/detai
 const ROOT_PLACE_PHOTOS_API = 'https://maps.googleapis.com/maps/api/place/photo?'; 
 
 
-const MAX_NUMBER_PLACES = 20;
+const MAX_NUMBER_PLACES = 9;
 
 export const requestPlaces =  (region, callback) => {
 
@@ -59,20 +58,16 @@ export const requestPlaces =  (region, callback) => {
         let {data} = await axios.get(placesUrl);
         let results = data.results;
        
-        var n = results.length >= MAX_NUMBER_PLACES? MAX_NUMBER_PLACES: results.length
+        
         var listOfPlaceDetails = [];
         var photo_urls  = {};
 
+        
+        //discard placed witch does not have any photo todisplay
+        var filteredResults =   filterPlacesWithouthPhoto(results);
+        var n = getAmountOfPlacesToShow(filteredResults);
         //get the details of each place
-        await Promise.all(results.slice(0,n).map( async (place) => {
-            let detailUrl = buildPlaceDetailUrl(place.place_id);
-            console.log('fetching url...',detailUrl);
-            let {data} = await axios.get(detailUrl);
-            if(data.status === 'OK'){
-                listOfPlaceDetails.push(data.result);
-            }            
-        }));
-
+        listOfPlaceDetails = await getDetailsOfPlaces(filteredResults.slice(0,n));
 
         //For each place build a photo_url
         await Promise.all(listOfPlaceDetails.map( place => {
@@ -87,11 +82,35 @@ export const requestPlaces =  (region, callback) => {
         }
         console.log(`obtained ${listOfPlaceDetails.length} place details`);
         console.log(photo_urls);
+        //TODO change the payload
         dispatch({type: NEW_PLACES, payload: placeData});
         callback();
     }
 }
 
+const getDetailsOfPlaces = async (places) => {
+    var array = [];
+    await Promise.all(places.map( async (place) => {
+        let detailUrl = buildPlaceDetailUrl(place.place_id);
+        console.log('fetching url...',detailUrl);
+        let {data} = await axios.get(detailUrl);
+        if(data.status === 'OK'){
+            array.push(data.result);
+        }            
+    }));
+    return array;
+}
+
+const filterPlacesWithouthPhoto = (places) => {
+   return places.filter((place)=> {
+        return place.photos && place.photos.length >0
+    })
+}
+
+
+const getAmountOfPlacesToShow = (places) =>{
+    return places.length >= MAX_NUMBER_PLACES? MAX_NUMBER_PLACES: places.length
+}
 
 const buildPlacesUrl = ({latitude,longitude}) => {
     const query = qs.stringify({...PLACES_QUERY_PARAMS, location: `${latitude},${longitude}` });

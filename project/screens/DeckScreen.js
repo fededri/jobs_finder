@@ -17,7 +17,6 @@ class DeckScreen extends Component {
     }
 
     renderCard(place){
-        console.log('rendering place',place);
         initialRegion={
             longitude: place.geometry.location.lat,
             latitude: place.geometry.location.lng,
@@ -26,24 +25,26 @@ class DeckScreen extends Component {
         };
         return(
             <Card
+            containerStyle={styles.cardContainerStyle}
             title={place.name}>
-            <View style={{height: 300}}>
+                <View style={{height: 300}}>
 
-            <Image
-            style={{flex:1}}
-            source={{uri: place.photo_url}}
-            />            
-         
-            </View>
-            <View style={styles.detailWrapper}>
-                <Text> {place.vicinity} </Text>
-                <Text> {place.international_phone_number} </Text>
-            </View>
+                    <Image
+                    style={{flex:1}}
+                    source={{uri: place.photo_url}}
+                    />            
+            
+                </View>
+                
+                <View style={styles.detailWrapper}>
+                    <Text> {place.vicinity} </Text>
+                    <Text> {place.international_phone_number} </Text>
+                </View>
 
 
-            <Text>
-            Some Other stuff    
-            </Text>
+                <Text>
+                Some Other stuff    
+                </Text>
 
             </Card>
         );
@@ -97,6 +98,10 @@ const styles = {
         flexDirection: 'row',
         justifyContent: 'space-around',
         marginBottom: 10
+    },
+    cardContainerStyle: {
+        height: 450,
+       
     }
 }
 
