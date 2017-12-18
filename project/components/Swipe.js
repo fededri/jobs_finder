@@ -9,6 +9,7 @@ import {
   Platform
 } from 'react-native';
 
+
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SWIPE_THRESHOLD = 0.25 * SCREEN_WIDTH;
 const SWIPE_OUT_DURATION = 0;
@@ -20,7 +21,8 @@ class Swipe extends Component {
   static defaultProps = {
     onSwipeRight: () => {},
     onSwipeLeft: () => {},
-    keyProp: 'id'
+    keyProp: 'id',
+    TAG: 'SwipeComponent'
   }
 
   constructor(props) {
@@ -49,7 +51,8 @@ class Swipe extends Component {
                   index: 0, 
                   newSlice: true,
                   maxNumberOfSlices: Math.ceil(this.props.data.length / MAX_NUM_OF_ELEMENTS_TO_RENDER),
-                  currentSliceNumber: 0
+                  currentSliceNumber: 0,
+                  globalIndex: 0
                   
                   };
   }
@@ -61,7 +64,13 @@ class Swipe extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.data !== this.props.data) {
-      this.setState({ index: 0 });
+      log(this.props.TAG,'refreshing component DATA, setting index to 0');
+      this.setState({ index: 0,
+                      newSlice: true,
+                      maxNumberOfSlices: Math.ceil(this.props.data.length / MAX_NUM_OF_ELEMENTS_TO_RENDER),
+                      currentSliceNumber: 0,
+                      globalIndex: 0
+                    });
     }
   }
 
@@ -79,16 +88,23 @@ class Swipe extends Component {
 
   onSwipeComplete(direction) {
     const { onSwipeLeft, onSwipeRight, data } = this.props;
-    const item = data[this.state.index];
+    const item = data[this.state.globalIndex];
 
     direction === 'right' ? onSwipeRight(item) : onSwipeLeft(item);
     this.state.position.setValue({ x: 0, y: 0 });
 
 
     if(this.state.index >= MAX_NUM_OF_ELEMENTS_TO_RENDER -1){
-      this.setState({index: 0, newSlice: true, currentSliceNumber: this.currentSliceNumber + 1});
+      log(this.props.TAG,'reset local index to 0 ');
+      this.setState({index: 0, newSlice: true, 
+                    currentSliceNumber: this.state.currentSliceNumber + 1,
+                    globalIndex: this.state.globalIndex +1
+                  });
     }else {
-      this.setState({ index: this.state.index + 1, newSlice: false });
+      this.setState({ index: this.state.index + 1,
+                     newSlice: false,
+                     globalIndex: this.state.globalIndex +1
+                    });
     }
    
   }
@@ -114,7 +130,9 @@ class Swipe extends Component {
   }
 
   renderCards() {
-    if (this.state.currentSliceNumber >= this.state.maxNumberOfSlices) {
+    console.log(this.props.TAG,'rendering');
+    log(this.props.TAG,'rendering with state: ', this.state);
+    if (this.state.globalIndex >= this.props.data.length -1) {
       return this.props.renderNoMoreCards();
     }
 
@@ -132,9 +150,7 @@ class Swipe extends Component {
     }
    
 
-    const deck = elements.map((item, i) => {
-      debugger
-      
+    const deck = elements.map((item, i) => {    
 
       if (i === this.state.index) {
         return (
@@ -143,7 +159,7 @@ class Swipe extends Component {
             style={[this.getCardStyle(), styles.cardStyle, {elevation: 20 ,zIndex: 99 }]}
             {...this.state.panResponder.panHandlers}
           >
-            {this.props.renderCard(item)}
+            {this.props.renderCard(item,i,this.state.globalIndex)}
           </Animated.View>
         );
       }
@@ -151,14 +167,15 @@ class Swipe extends Component {
       return (
         <Animated.View
           key={item[this.props.keyProp]}
-          style={[styles.cardStyle, { margin: 10, zIndex: -i }]}
+          style={[styles.cardStyle, { margin: 10, zIndex: i }]}
         >
-          {this.props.renderCard(item)}
+          {this.props.renderCard(item,i,this.state.globalIndex)}
         </Animated.View>
       );
     });
 
-    return Platform.OS === 'android' ? deck : deck.reverse();
+    return deck;
+   // return Platform.OS === 'android' ? deck : deck.reverse();
   }
 
   render() {

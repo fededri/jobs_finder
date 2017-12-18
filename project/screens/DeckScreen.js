@@ -1,10 +1,12 @@
 import React,{Component} from 'react';
-import {View, Text, Platform,Image} from 'react-native';
+import {View, Text, Platform,Image, Linking, TouchableNativeFeedback} from 'react-native';
 import { connect } from 'react-redux';
 import Swipe from '../components/Swipe';
 import {MapView} from 'expo';
 import {Card, Button, Icon} from 'react-native-elements';
 import * as actions from '../actions';
+import Swipe2 from '../components/Swipe2';
+
 
 class DeckScreen extends Component {
     
@@ -16,13 +18,59 @@ class DeckScreen extends Component {
         }    
     }
 
-    renderCard(place){
+
+
+    renderOpenNow = (place) => {
+        if(place.opening_hours && place.opening_hours.open_now){
+            return(
+                <View
+                style={styles.detailWrapper}
+                >
+                <Text> Abierto ahora! </Text>
+                </View>
+            );
+        }
+
+        return null;
+    }
+
+
+    renderWebSite = (place) => {
+        if(place.website){
+           return (
+            <TouchableNativeFeedback>
+                <Text
+                onPress= {()=> Linking.openURL(place.website)}
+                style={{color: 'rgb(80,0,250)'}}
+                > visitar sitio web </Text>
+            </TouchableNativeFeedback>
+    
+          ); 
+        }
+      return null;
+    }
+
+    renderWebsiteAndOpen = (place) => {
+        const website = this.renderWebSite(place);
+        const open = this.renderOpenNow(place);
+
+        return (
+            <View style={styles.detailWrapper}>
+                {website}
+                {open}
+            </View>
+        );
+        
+    }
+
+    renderCard = (place) => {
         initialRegion={
             longitude: place.geometry.location.lat,
             latitude: place.geometry.location.lng,
             longitudeDelta: 0.045,
             latitudeDelta: 0.02
         };
+        log("DeckSCreen", place);
         return(
             <Card
             containerStyle={styles.cardContainerStyle}
@@ -37,14 +85,15 @@ class DeckScreen extends Component {
                 </View>
                 
                 <View style={styles.detailWrapper}>
-                    <Text> {place.vicinity} </Text>
-                    <Text> {place.international_phone_number} </Text>
+                    <Text style={{flex:1, textAlign: 'center', textAlignVertical:'center'}}> {place.vicinity} </Text>
+                    <Text style={{flex:1}}> {place.international_phone_number} </Text>
                 </View>
 
+                {this.renderWebsiteAndOpen(place)}
+            
+               
 
-                <Text>
-                Some Other stuff    
-                </Text>
+              
 
             </Card>
         );
@@ -81,7 +130,7 @@ class DeckScreen extends Component {
     render(){
         return(
             <View>
-               <Swipe
+               <Swipe2
                data={this.props.places}
                renderCard={this.renderCard}
                renderNoMoreCards={this.renderNoMoreCards}
@@ -100,7 +149,7 @@ const styles = {
         marginBottom: 10
     },
     cardContainerStyle: {
-        height: 450,
+       
        
     }
 }

@@ -3,15 +3,18 @@ import qs from 'qs';
 import {
     NEW_PLACES
 }from './types';
-
+import {getlanguageCode} from '../utils/locale';
+import log from '../log';
 
 const API_KEY = 'AIzaSyC4OUI7KsHfC9u65nA3PQcUlmyjORUz9bc';
 
 
+//TODO add 'types' parameter
 const PLACES_QUERY_PARAMS = {
     key: API_KEY,
     radius: 2000,
-    location: ''
+    location: '',
+    language: getlanguageCode()
 };
 
 
@@ -24,7 +27,7 @@ const PLACE_DETAIL_PARAMS = {
 const PLACE_PHOTOS_PARAMS = {
     key: API_KEY,
     photoreference: '',
-    maxheight: 300
+    maxheight: 400
 }
 
 /**
@@ -48,13 +51,13 @@ const ROOT_PLACES_DETAIL_API = 'https://maps.googleapis.com/maps/api/place/detai
 const ROOT_PLACE_PHOTOS_API = 'https://maps.googleapis.com/maps/api/place/photo?'; 
 
 
-const MAX_NUMBER_PLACES = 9;
+const MAX_NUMBER_PLACES = 3;
 
 export const requestPlaces =  (region, callback) => {
 
     return async (dispatch) => {
         let placesUrl = buildPlacesUrl(region);
-        console.log('fetching url...',placesUrl);
+        log('fetching url...',placesUrl);
         let {data} = await axios.get(placesUrl);
         let results = data.results;
        
@@ -80,8 +83,8 @@ export const requestPlaces =  (region, callback) => {
             places: listOfPlaceDetails,
             photo_urls
         }
-        console.log(`obtained ${listOfPlaceDetails.length} place details`);
-        console.log(photo_urls);
+        log(`obtained ${listOfPlaceDetails.length} place details`);
+        log(photo_urls);
         //TODO change the payload
         dispatch({type: NEW_PLACES, payload: placeData});
         callback();
@@ -92,7 +95,7 @@ const getDetailsOfPlaces = async (places) => {
     var array = [];
     await Promise.all(places.map( async (place) => {
         let detailUrl = buildPlaceDetailUrl(place.place_id);
-        console.log('fetching url...',detailUrl);
+        log('fetching url...',detailUrl);
         let {data} = await axios.get(detailUrl);
         if(data.status === 'OK'){
             array.push(data.result);
