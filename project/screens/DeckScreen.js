@@ -75,10 +75,10 @@ class DeckScreen extends Component {
             <Card
             containerStyle={styles.cardContainerStyle}
             title={place.name}>
-                <View style={{height: 300}}>
+                <View style={{height: 200}}>
 
                     <Image
-                    style={{flex:1}}
+                    style={{flex:1, height:200}}
                     source={{uri: place.photo_url}}
                     />            
             
@@ -149,8 +149,7 @@ const styles = {
         marginBottom: 10
     },
     cardContainerStyle: {
-       
-       
+       height:350       
     }
 }
 

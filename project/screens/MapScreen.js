@@ -1,5 +1,5 @@
 import React,{Component} from 'react';
-import {View, Text, ActivityIndicator,Platform,Dimensions} from 'react-native';
+import {View, Text, ActivityIndicator,Platform,Dimensions, Animated,Easing} from 'react-native';
 import {MapView,Location, Permissions} from 'expo';
 import {Spinner} from '../components/common/Spinner'
 import {connect} from 'react-redux';
@@ -10,6 +10,8 @@ import EditText from '../components/common/EditText'
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 class MapScreen extends Component {
+
+  
 
     initialRegion = { 
          longitude: -58,
@@ -40,6 +42,8 @@ class MapScreen extends Component {
     }
 
     
+   
+
     componentWillReceiveProps(nextProps){
         //only refresh region first time
         if(!this.props.location.latitude){
@@ -59,6 +63,8 @@ class MapScreen extends Component {
 
     componentDidMount()
     {
+       
+
         this.setState({mapLoaded: true})
         this.getLocationUpdatesAsync();
         
@@ -143,6 +149,7 @@ class MapScreen extends Component {
             );
         }
 
+
         return(
             <View style={{flex:1, flexDirection:'column'}}>
                 <View style={styles.searchBarContainerStyle}>
@@ -165,7 +172,20 @@ class MapScreen extends Component {
                 style={{flex:1}}
                 showsUserLocation={true}
                 ref={(map)=> this.map = map}
-                />
+                >
+
+                    <MapView.Marker
+                        coordinate= {{latitude: this.state.region.latitude, longitude: this.state.region.longitude}}
+                        description = {"Places will be search near this point"}               
+                    >
+                        <MapView.Callout
+                        
+                        />
+
+
+                    </MapView.Marker>
+
+                </MapView>
 
 
                 <View
