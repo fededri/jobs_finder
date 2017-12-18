@@ -51,7 +51,7 @@ const ROOT_PLACES_DETAIL_API = 'https://maps.googleapis.com/maps/api/place/detai
 const ROOT_PLACE_PHOTOS_API = 'https://maps.googleapis.com/maps/api/place/photo?'; 
 
 
-const MAX_NUMBER_PLACES = 40;
+const MAX_NUMBER_PLACES = 10;
 
 export const requestPlaces =  (region, callback) => {
 

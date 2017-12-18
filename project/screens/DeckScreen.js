@@ -1,5 +1,5 @@
 import React,{Component} from 'react';
-import {View, Text, Platform,Image, Linking, TouchableNativeFeedback} from 'react-native';
+import {View, Text, Platform,Image, Linking, TouchableOpacity} from 'react-native';
 import { connect } from 'react-redux';
 import Swipe from '../components/Swipe';
 import {MapView} from 'expo';
@@ -23,11 +23,9 @@ class DeckScreen extends Component {
     renderOpenNow = (place) => {
         if(place.opening_hours && place.opening_hours.open_now){
             return(
-                <View
-                style={styles.detailWrapper}
-                >
-                <Text> Abierto ahora! </Text>
-                </View>
+                
+                <Text style={styles.detailWrapper}> Abierto ahora! </Text>
+                
             );
         }
 
@@ -38,12 +36,12 @@ class DeckScreen extends Component {
     renderWebSite = (place) => {
         if(place.website){
            return (
-            <TouchableNativeFeedback>
+            <TouchableOpacity>
                 <Text
                 onPress= {()=> Linking.openURL(place.website)}
-                style={{color: 'rgb(80,0,250)'}}
-                > visitar sitio web </Text>
-            </TouchableNativeFeedback>
+                style={{color: '#00aced'}}
+                >  Ir a la web </Text>
+            </TouchableOpacity>
     
           ); 
         }
@@ -61,6 +59,18 @@ class DeckScreen extends Component {
             </View>
         );
         
+    }
+
+
+    renderPhone(place){
+        if(place.international_phone_number){
+           return (
+        <View style={[styles.detailWrapper,{flexDirection: 'row'}]}>
+            
+                 <Text style={{flex:0.5, color:'rgb(0,0,0)'}}>{place.international_phone_number}</Text>
+                 <Icon  name='call' color='#00aced' />
+        </View>);   
+        }else return null;
     }
 
     renderCard = (place) => {
@@ -84,17 +94,15 @@ class DeckScreen extends Component {
             
                 </View>
                 
-                <View style={styles.detailWrapper}>
-                    <Text style={{flex:1, textAlign: 'center', textAlignVertical:'center'}}> {place.vicinity} </Text>
-                    <Text style={{flex:1}}> {place.international_phone_number} </Text>
+
+                <View style={styles.detailWrapper} >
+                    <Text > 
+                        {place.vicinity}
+                    </Text>                      
                 </View>
-
+      
+                {this.renderPhone(place)}
                 {this.renderWebsiteAndOpen(place)}
-            
-               
-
-              
-
             </Card>
         );
     }
@@ -144,12 +152,11 @@ class DeckScreen extends Component {
 
 const styles = {
     detailWrapper: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        marginBottom: 10
+       marginTop: 10,
+       justifyContent: 'flex-start'
     },
     cardContainerStyle: {
-       height:350       
+       height:400       
     }
 }
 

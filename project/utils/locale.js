@@ -8,7 +8,7 @@ export const getlanguageCode = () => {
     if (Platform.OS === "android") {
       langRegionLocale = NativeModules.I18nManager.localeIdentifier || "";
     } else if (Platform.OS === "ios") {
-      langRegionLocale = NativeModules.SettingsManager.settings.AppleLocale || "";
+      return 'en';
     }
     
     // "en_US" -> "en", "es_CL" -> "es", etc
