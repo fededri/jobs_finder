@@ -24,7 +24,7 @@ class DeckScreen extends Component {
         if(place.opening_hours && place.opening_hours.open_now){
             return(
                 
-                <Text >{t('now open')}</Text>
+                <Text style={{marginTop:5}} >{t('now open')}</Text>
                 
             );
         }
@@ -36,11 +36,13 @@ class DeckScreen extends Component {
     renderWebSite = (place) => {
         if(place.website){
            return (
-            <TouchableOpacity>
-                <Text
-                onPress= {()=> Linking.openURL(place.website)}
+            <TouchableOpacity
+             onPress= {()=> Linking.openURL(place.website)}
+             style={{width: 80}}
+            >
+                <Text               
                 style={{color: '#00aced'}}
-                > aaaa {t("go to web")} </Text>
+                >  {t("go to web")} </Text>
             </TouchableOpacity>
     
           ); 
@@ -57,8 +59,7 @@ class DeckScreen extends Component {
                 {website}
                 {open}
             </View>
-        );
-        
+        );        
     }
 
 
@@ -68,7 +69,7 @@ class DeckScreen extends Component {
         <View style={[styles.detailWrapper,{flexDirection: 'row'}]}>
             
                  <Text style={{flex:0.5, color:'rgb(0,0,0)'}}>{place.international_phone_number}</Text>
-                 <Icon  name='call' color='#00aced' />
+                 <Icon  name='call' color='#00aced' onPress={()=> {Linking.openURL(`tel: ${place.international_phone_number}`)}} />
         </View>);   
         }else return null;
     }
