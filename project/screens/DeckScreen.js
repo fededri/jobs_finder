@@ -6,7 +6,7 @@ import {MapView} from 'expo';
 import {Card, Button, Icon} from 'react-native-elements';
 import * as actions from '../actions';
 import Swipe2 from '../components/Swipe2';
-
+import {t} from '../Strings';
 
 class DeckScreen extends Component {
     
@@ -24,7 +24,7 @@ class DeckScreen extends Component {
         if(place.opening_hours && place.opening_hours.open_now){
             return(
                 
-                <Text style={styles.detailWrapper}> Abierto ahora! </Text>
+                <Text >{t('now open')}</Text>
                 
             );
         }
@@ -40,7 +40,7 @@ class DeckScreen extends Component {
                 <Text
                 onPress= {()=> Linking.openURL(place.website)}
                 style={{color: '#00aced'}}
-                >  Ir a la web </Text>
+                > aaaa {t("go to web")} </Text>
             </TouchableOpacity>
     
           ); 

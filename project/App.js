@@ -12,7 +12,8 @@ import configureStore from './store';
 import { PersistGate } from 'redux-persist/es/integration/react';
 import registerForNotifications from './services/push_notifications';
 import Expo, {Notifications} from 'expo';
-
+import {getlanguageCode} from './utils/locale';
+import {setCurrentLanguage} from './Strings';
 export const {persistor,store} = configureStore();
 
 export default class App extends React.Component {
@@ -20,6 +21,7 @@ export default class App extends React.Component {
 
  componentDidMount(){
    //registerForNotifications();
+   this.loadLocaleLanguange();
    Notifications.addListener((notification)=> {
      const {data: {text}} = notification;
      console.log(`notificacion recibida: ${text}`);
@@ -32,6 +34,13 @@ export default class App extends React.Component {
      }
      
    });
+ }
+
+
+ loadLocaleLanguange = async () => {
+  getlanguageCode()
+    .then((locale) => setCurrentLanguage(locale))
+    .catch((error)=> console.log("WARNING: ", "Error retrieving current locale language ", error));
  }
 
   render() {

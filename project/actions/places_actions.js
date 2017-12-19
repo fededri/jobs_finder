@@ -13,8 +13,7 @@ const API_KEY = 'AIzaSyC4OUI7KsHfC9u65nA3PQcUlmyjORUz9bc';
 const PLACES_QUERY_PARAMS = {
     key: API_KEY,
     radius: 2000,
-    location: '',
-    language: getlanguageCode()
+    location: ''
 };
 
 
@@ -56,7 +55,8 @@ const MAX_NUMBER_PLACES = 10;
 export const requestPlaces =  (region, callback) => {
 
     return async (dispatch) => {
-        let placesUrl = buildPlacesUrl(region);
+        let localeLanguage = await getlanguageCode();
+        let placesUrl = buildPlacesUrl(region, localeLanguage);
         log('fetching url...',placesUrl);
         let {data} = await axios.get(placesUrl);
         let results = data.results;
@@ -115,8 +115,10 @@ const getAmountOfPlacesToShow = (places) =>{
     return places.length >= MAX_NUMBER_PLACES? MAX_NUMBER_PLACES: places.length
 }
 
-const buildPlacesUrl = ({latitude,longitude}) => {
-    const query = qs.stringify({...PLACES_QUERY_PARAMS, location: `${latitude},${longitude}` });
+const buildPlacesUrl = ({latitude,longitude}, language) => {
+
+    const query = qs.stringify({...PLACES_QUERY_PARAMS, location: `${latitude},${longitude}`,
+                           language});
     return `${ROOT_PLACES_API}${query}`
 }
 
