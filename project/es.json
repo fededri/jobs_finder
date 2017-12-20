@@ -1,4 +1,7 @@
 {
+    "welcome": "Bienvenido a Sirch!",
+    "use this app for": "Sirch te permite encontrar los lugares cercanos a cualquier ubicacion y filtrar los resultados",
+    "select location": "Centra el mapa en la ubicación y haz click en buscar para obtener los resultados",
     "go to web":"Ir a la web",
     "now open": "Ahora abierto!"
 }

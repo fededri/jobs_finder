@@ -6,6 +6,8 @@ import {
     from './types';
 import {Facebook} from 'expo';
 
+const FB_APP_ID = '348051995660239';
+
 export const facebookLogin =  () => {
 
     return async (dispatch) => {
@@ -22,7 +24,7 @@ export const facebookLogin =  () => {
 
 //helper function for fb login
 const doFacebookLogin = async dispatch => {
-    let {type,token} = await Facebook.logInWithReadPermissionsAsync('348051995660239',{
+    let {type,token} = await Facebook.logInWithReadPermissionsAsync(FB_APP_ID,{
         permissions: ['public_profile']
     })
 

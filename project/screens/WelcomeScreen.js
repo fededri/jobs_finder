@@ -1,29 +1,77 @@
 import React,{Component} from 'react';
-import {View, Text,AsyncStorage} from 'react-native';
+import {View, Text,AsyncStorage,Platform,Animated,Dimensions} from 'react-native';
 import Slides from '../components/Slides'
 import _ from 'lodash';
 import {AppLoading} from 'expo';
+import Swiper from 'react-native-swiper';
+import {t} from '../Strings';
+import Button from '../components/common/Button';
+
+
+const SCREEN_WIDTH = Dimensions.get('window').width;
+
 const SLIDE_DATA = [
-    {text: 'Welcome to JobApp', color:'#03A9F4'},
-    {text: 'Use this to get a job', color:'#009688'},
-    {text: 'Set your location, then swipe away', color:'#03A9F4'}
+    {text: 'Welcome to JobApp', color:'#1565C0'},
+    {text: 'Use this to get a job', color:'#1976D2'},
+    {text: 'Set your location, then swipe away', color:'#1E88E5'}
 ];
 
 class WelcomeScreen extends Component {
 
-    state = {token:null}
+   
 
+    constructor(props){
+        super(props);
+        this.springValue = new Animated.Value(0.8);
+        this.translateX = new Animated.Value(0);
+    }
+
+
+
+    spring(){
+        this.springValue.setValue(0.8);
+        Animated.spring(
+            this.springValue,{
+                toValue: 1,
+                mass: 1.3
+            }
+        ).start(()=> this.springBack());
+    }
+
+
+    springBack(){
+        this.springValue.setValue(1);
+        Animated.spring(
+            this.springValue,{
+                toValue: 0.8,
+                mass: 0.5
+            }
+        ).start(()=> this.spring());
+    }
+
+    translateOut = () => {
+        this.translateX.setValue(0);
+        Animated.timing(
+            this.translateX,
+            {
+                toValue: -SCREEN_WIDTH,
+                duration: 500
+            }
+        ).start(()=> this.launchAuthScreen());
+    }
 
     async componentWillMount(){
-       let token = await AsyncStorage.getItem('fb_token');
+       let first_time = await AsyncStorage.getItem('first_time');
 
-       if(token){
-           this.props.navigation.navigate('map');
-           this.setState({token})
-       }else {
-        this.setState({token: false});
+       if(first_time !== undefined){
+           this.props.navigation.navigate('auth');
        }
      
+    }
+
+    componentDidMount(){
+        this.spring();
+        AsyncStorage.setItem('first_time','true');
     }
 
     onSlidesComplete = () =>{ 
@@ -32,25 +80,81 @@ class WelcomeScreen extends Component {
         navigate('auth');
     }
 
+    launchAuthScreen = () => {
+        const {navigate} = this.props.navigation;
+        navigate('auth');
+    }
+
     render(){
 
-        if(_.isNull(this.state.token)){
-            return <AppLoading/>
-        }
-
+     
         return(
-            <View 
-            style={{flex:1}}
-            >
-             <Slides
-            onComplete={this.onSlidesComplete}
-            style={{backgroundColor: 'rgba(200,0,0,1)', flex:1}}
-            data={SLIDE_DATA}
-            />
-            </View>
-           
+            <Swiper 
+            loadMinimal={true}
+            dotColor="#90CAF9"
+            activeDotColor="#E3F2FD"
+            loop={false}
+            style={styles.wrapper}>
+                <View style={ [styles.slide1, {backgroundColor: SLIDE_DATA[0].color}] }>
+                    <Text style={styles.text}>{t("welcome")}</Text>
+                </View>
+
+                <View style={[styles.slide2, {backgroundColor: SLIDE_DATA[1].color}]}>
+                    <Text style={styles.text}>{t("use this app for")}</Text>
+                </View>
+
+                <View style={[styles.slide3, {backgroundColor: SLIDE_DATA[2].color}, {flexDirection: 'column'}]}>
+                    <Animated.View style={{transform:[{translateX: this.translateX}]}}>
+                    <Text style={styles.text}>{t("select location")}</Text>
+                    </Animated.View>
+                    <Animated.View style={{width: 200, height:40, marginTop: 20,
+                     transform: [{scale: this.springValue}, {translateX: this.translateX}]}}>
+                      <Button
+                      onPress={this.translateOut}
+                      childrenStyle={{color: '#FFFFFF'}}
+                      customStyle={{backgroundColor: '#6ec6ff'}}
+                      >OK!</Button>
+                    </Animated.View>
+                   
+                </View>
+            </Swiper>           
         );
     }
+}
+
+styles = {
+    wrapper: {
+    },
+    slide1: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center'
+    },
+    slide2: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center'
+    },
+    slide3: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center'
+    },
+    text: {
+        color: '#FFFFFF',
+        fontSize: 20,
+        textAlign: 'center',
+        marginLeft: 5,
+        marginRight:5,
+        ...Platform.select({
+            ios:{
+
+            },
+            android:{
+                textAlignVertical: 'center'
+            }
+        })
+      }
 }
 
 
