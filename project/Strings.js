@@ -18,7 +18,7 @@ export const  t = (text) => {
 
     switch (language) {
         case 'en':
-            return en.text;
+            return en[text];
 
         case 'es':
             return es[text];

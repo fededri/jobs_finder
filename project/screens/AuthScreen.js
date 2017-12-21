@@ -11,14 +11,11 @@ class AuthScreen extends Component {
     
 
     async componentDidMount(){
-    let fb_token =  await AsyncStorage.getItem('fb_token');
+    /*let fb_token =  await AsyncStorage.getItem('fb_token');
 
     if(fb_token){
         this.launchMapScreen();
-    }
-      //  this.props.facebookLogin();
-      //  this.onAuthComplete(this.props);
-        //AsyncStorage.removeItem('fb_token');
+    }*/
     }
 
 

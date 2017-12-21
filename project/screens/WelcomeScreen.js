@@ -33,7 +33,7 @@ class WelcomeScreen extends Component {
         Animated.spring(
             this.springValue,{
                 toValue: 1,
-                mass: 1.3
+                mass: 0.2
             }
         ).start(()=> this.springBack());
     }
@@ -44,7 +44,7 @@ class WelcomeScreen extends Component {
         Animated.spring(
             this.springValue,{
                 toValue: 0.8,
-                mass: 0.5
+                mass: 0.2
             }
         ).start(()=> this.spring());
     }
@@ -60,14 +60,14 @@ class WelcomeScreen extends Component {
         ).start(()=> this.launchAuthScreen());
     }
 
-    async componentWillMount(){
+   /* async componentWillMount(){
        let first_time = await AsyncStorage.getItem('first_time');
 
        if(first_time !== undefined){
            this.props.navigation.navigate('auth');
        }
      
-    }
+    } */
 
     componentDidMount(){
         this.spring();
@@ -86,8 +86,6 @@ class WelcomeScreen extends Component {
     }
 
     render(){
-
-     
         return(
             <Swiper 
             loadMinimal={true}
