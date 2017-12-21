@@ -77,7 +77,7 @@ export default class App extends React.Component {
     {
     tabBarPosition: 'bottom',
     backBehavior: 'none',
-    lazy: false,
+    lazy: true,
     swipeEnabled: false,
     navigationOptions :{
       tabBarVisible : false

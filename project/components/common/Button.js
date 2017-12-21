@@ -1,20 +1,44 @@
-import React from  'react';
-import {Text, TouchableOpacity} from 'react-native';
+import React, {Component} from  'react';
+import {Text, TouchableOpacity,View} from 'react-native';
+import {Icon} from 'react-native-elements';
 
 
 
 
-const Button = ({onPress, children, customStyle, childrenStyle}) => {
+class  Button extends Component{
 
-    const {buttonStyle, textStyle} = styles;
+     renderIcon(icon,color){
+         if(icon){
+             return(
+                <View
+                style={styles.iconContainerStyle}
+                >             
+                  <Icon
+                  name={icon}
+                  color={color}
+                   />
+              
+                </View>
+               
+             );
+         }
+     }
 
-    return (
-        <TouchableOpacity onPress={onPress} style = {[buttonStyle, customStyle]}>
-           <Text style = {[textStyle,childrenStyle]}> 
-               {children}
-            </Text>
-        </TouchableOpacity>
-    );
+  
+    render(){
+        const {onPress, children, customStyle, childrenStyle, icon, iconColor} = this.props;
+
+        return (
+            <TouchableOpacity onPress={onPress} style = {[styles.buttonStyle, customStyle]}>                
+                {this.renderIcon(icon,iconColor)}
+    
+               <Text style = {[styles.textStyle,childrenStyle]}> 
+                   {children}
+                </Text>
+            </TouchableOpacity>
+        );
+    }
+
 
 }
 
@@ -31,13 +55,20 @@ const styles = {
 
     buttonStyle : {
         flex: 1,
+        flexDirection: 'row',
         alignSelf: 'stretch',
         backgroundColor: '#fff',
         borderRadius: 3,
         borderWidth: 1,
         borderColor : '#077aff',
         marginLeft: 5,
-        marginRight:5
+        marginRight:5,
+        justifyContent: 'center'
+    },
+    iconContainerStyle:{
+        flex:0.1,
+        justifyContent:'center',
+        marginRight:10
     }
 };
 

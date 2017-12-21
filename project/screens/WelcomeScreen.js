@@ -1,5 +1,9 @@
 import React,{Component} from 'react';
-import {View, Text,AsyncStorage,Platform,Animated,Dimensions,ViewPagerAndroid} from 'react-native';
+import {View, Text,AsyncStorage,Platform,Animated,Dimensions,
+    ViewPagerAndroid,
+     UIManager,
+     LayoutAnimation
+    } from 'react-native';
 import Slides from '../components/Slides'
 import _ from 'lodash';
 import {AppLoading} from 'expo';
@@ -23,11 +27,13 @@ class WelcomeScreen extends Component {
 
     constructor(props){
         super(props);
+        
         this.springValue = new Animated.Value(0.8);
         this.translateX = new Animated.Value(0);
         this.state = {
             visibleSwiper: false
          };
+   
     }
 
 
@@ -98,7 +104,7 @@ class WelcomeScreen extends Component {
 
 
     render(){
-
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
         if(this.state.visibleSwiper){
             return(
                

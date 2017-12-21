@@ -1,5 +1,5 @@
 import React,{Component} from 'react';
-import {View, Text, AsyncStorage,Image} from 'react-native';
+import {View, Text, AsyncStorage,Image,Animated, Easing,LayoutAnimation,UIManager} from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../actions';
 import {Icon,SocialIcon,Divider} from 'react-native-elements';
@@ -8,9 +8,14 @@ import Button from '../components/common/Button';
 
 class AuthScreen extends Component {
 
-    
+    constructor(props){
+        super(props);
+        this.alphaValue = new Animated.Value(0);
+        UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
+    }
 
     async componentDidMount(){
+        this.animateButtons();
     /*let fb_token =  await AsyncStorage.getItem('fb_token');
 
     if(fb_token){
@@ -34,7 +39,20 @@ class AuthScreen extends Component {
         this.props.navigation.navigate('map');
     }
 
+
+    animateButtons= () => {
+        this.alphaValue.setValue(0);
+        Animated.timing(
+            this.alphaValue,
+            {
+                toValue:1,
+                duration: 1000
+            }
+        ).start();
+    }
+
     render(){
+    LayoutAnimation.spring();
         return(
             <View
             style={styles.rootStyle}
@@ -47,8 +65,9 @@ class AuthScreen extends Component {
                 </View>
               
 
-                <View
-                style={styles.loginStyle}
+                <Animated.View
+                
+                style={[styles.loginStyle,{opacity: this.alphaValue}]}
                 >
                     <SocialIcon
                     style={styles.fbStyle}
@@ -60,6 +79,8 @@ class AuthScreen extends Component {
 
                     <View style={styles.mailContainerStyle}>
                         <Button
+                        icon="email"
+                        iconColor="#FFFFFF"
                         customStyle={styles.mailStyle}
                         childrenStyle={{color: '#FFFFFF'}}
                         >
@@ -67,7 +88,7 @@ class AuthScreen extends Component {
                         </Button>
                     </View>
                    
-                </View>
+                </Animated.View>
 
 
 
@@ -114,7 +135,9 @@ const styles = {
         marginRight: 20,
         marginLeft:20,
         backgroundColor: '#3949AB',      
-        borderRadius:30
+        borderRadius:30,
+        elevation: 2,
+        borderWidth:0
     }
 }
 
