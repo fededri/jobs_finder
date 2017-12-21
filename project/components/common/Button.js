@@ -66,7 +66,7 @@ const styles = {
         justifyContent: 'center'
     },
     iconContainerStyle:{
-        flex:0.1,
+        flex:0.2,
         justifyContent:'center',
         marginRight:10
     }

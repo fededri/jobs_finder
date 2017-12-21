@@ -1,5 +1,9 @@
 import React,{Component} from 'react';
-import {View, Text, ActivityIndicator,Platform,Dimensions, Animated,Easing} from 'react-native';
+import {View, Text, ActivityIndicator,
+    Platform,Dimensions, 
+    Animated,
+    Easing
+} from 'react-native';
 import {MapView,Location, Permissions} from 'expo';
 import {Spinner} from '../components/common/Spinner'
 import {connect} from 'react-redux';

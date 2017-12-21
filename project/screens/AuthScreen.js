@@ -5,12 +5,15 @@ import * as actions from '../actions';
 import {Icon,SocialIcon,Divider} from 'react-native-elements';
 import {t} from '../Strings';
 import Button from '../components/common/Button';
+import CustomLayoutSpring from '../animations/CustomLayoutSpring';
+
 
 class AuthScreen extends Component {
 
     constructor(props){
         super(props);
         this.alphaValue = new Animated.Value(0);
+        this.springValue = new Animated.Value(0);
         UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
     }
 
@@ -41,14 +44,15 @@ class AuthScreen extends Component {
 
 
     animateButtons= () => {
-        this.alphaValue.setValue(0);
-        Animated.timing(
-            this.alphaValue,
-            {
-                toValue:1,
-                duration: 1000
+    
+        this.springValue.setValue(10);
+        Animated.spring(
+            this.springValue,{
+                toValue: 0,
+                mass: 2
             }
         ).start();
+
     }
 
     render(){
@@ -60,25 +64,30 @@ class AuthScreen extends Component {
                 <View    style={styles.logoStyle}>
                     <Image  
                     style={styles.imageStyle}               
-                    source={{uri: 'http://www.singaporeg.sg/images/Login.png'}}
+                    
                     /> 
                 </View>
               
 
                 <Animated.View
                 
-                style={[styles.loginStyle,{opacity: this.alphaValue}]}
+                style={[styles.loginStyle]}
                 >
-                    <SocialIcon
-                    style={styles.fbStyle}
-                    title='Sign In With Facebook'
-                    button
-                    type='facebook'
-                    onPress={()=> {this.props.facebookLogin()}}
-                    />
+                    <Animated.View style={[styles.fbStyle, 
+                                    {marginLeft: this.springValue, marginRight: this.springValue, marginBottom: this.springValue}]}>
+                        <SocialIcon
+                        title='Sign In With Facebook'
+                        button
+                        type='facebook'
+                        onPress={()=> {this.props.facebookLogin()}}
+                        />
+                    </Animated.View>
+                  
 
-                    <View style={styles.mailContainerStyle}>
+                    <Animated.View style={[styles.mailContainerStyle,
+                         {marginLeft: this.springValue, marginRight: this.springValue, marginTop: this.springValue}]}>
                         <Button
+                        onPress={this.animateButtons}
                         icon="email"
                         iconColor="#FFFFFF"
                         customStyle={styles.mailStyle}
@@ -86,7 +95,7 @@ class AuthScreen extends Component {
                         >
                             Sign Up with email
                         </Button>
-                    </View>
+                    </Animated.View>
                    
                 </Animated.View>
 
