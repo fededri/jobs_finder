@@ -62,7 +62,7 @@ export default class App extends React.Component {
         },
         {
           tabBarPosition: 'bottom',
-          lazy: true,
+          lazy: false,
           swipeEnabled:false,
           tabBarOptions:{
             labelStyle: {fontSize: 12} ,
@@ -77,7 +77,7 @@ export default class App extends React.Component {
     {
     tabBarPosition: 'bottom',
     backBehavior: 'none',
-    lazy: true,
+    lazy: false,
     swipeEnabled: false,
     navigationOptions :{
       tabBarVisible : false

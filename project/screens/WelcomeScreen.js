@@ -1,5 +1,5 @@
 import React,{Component} from 'react';
-import {View, Text,AsyncStorage,Platform,Animated,Dimensions} from 'react-native';
+import {View, Text,AsyncStorage,Platform,Animated,Dimensions,ViewPagerAndroid} from 'react-native';
 import Slides from '../components/Slides'
 import _ from 'lodash';
 import {AppLoading} from 'expo';
@@ -9,6 +9,7 @@ import Button from '../components/common/Button';
 
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
+const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 const SLIDE_DATA = [
     {text: 'Welcome to JobApp', color:'#1565C0'},
@@ -24,6 +25,9 @@ class WelcomeScreen extends Component {
         super(props);
         this.springValue = new Animated.Value(0.8);
         this.translateX = new Animated.Value(0);
+        this.state = {
+            visibleSwiper: false
+         };
     }
 
 
@@ -72,6 +76,11 @@ class WelcomeScreen extends Component {
     componentDidMount(){
         this.spring();
         AsyncStorage.setItem('first_time','true');
+        setTimeout(() => {
+            this.setState({
+              visibleSwiper: true
+            });
+         }, 100);
     }
 
     onSlidesComplete = () =>{ 
@@ -85,38 +94,123 @@ class WelcomeScreen extends Component {
         navigate('auth');
     }
 
+
+
+
     render(){
-        return(
-            <Swiper 
-            loadMinimal={true}
-            dotColor="#90CAF9"
-            activeDotColor="#E3F2FD"
-            loop={false}
-            style={styles.wrapper}>
-                <View style={ [styles.slide1, {backgroundColor: SLIDE_DATA[0].color}] }>
-                    <Text style={styles.text}>{t("welcome")}</Text>
-                </View>
 
-                <View style={[styles.slide2, {backgroundColor: SLIDE_DATA[1].color}]}>
-                    <Text style={styles.text}>{t("use this app for")}</Text>
-                </View>
+        if(this.state.visibleSwiper){
+            return(
+               
+                <Swiper 
+                height={SCREEN_HEIGHT}
+                loadMinimal={true}
+                dotColor="#90CAF9"
+                activeDotColor="#E3F2FD"
+                loop={false}>
+                    <View key="1" style={ [styles.slide1, {backgroundColor: SLIDE_DATA[0].color}] }>
+                        <Text style={styles.text}>{t("welcome")}</Text>
+                    </View>
+        
+                    <View key="2" style={[styles.slide2, {backgroundColor: SLIDE_DATA[1].color}]}>
+                        <Text style={styles.text}>{t("use this app for")}</Text>
+                    </View>
+        
+                    <View  key="3" style={[styles.slide3, {backgroundColor: SLIDE_DATA[2].color}, {flexDirection: 'column'}]}>
+                        <Animated.View style={{transform:[{translateX: this.translateX}]}}>
+                        <Text style={styles.text}>{t("select location")}</Text>
+                        </Animated.View>
+                        <Animated.View style={{width: 200, height:40, marginTop: 20,
+                         transform: [{scale: this.springValue}, {translateX: this.translateX}]}}>
+                          <Button
+                          onPress={this.translateOut}
+                          childrenStyle={{color: '#FFFFFF'}}
+                          customStyle={{backgroundColor: '#6ec6ff'}}
+                          >OK!</Button>
+                        </Animated.View>
+                       
+                    </View>
+                </Swiper>    
+        
+            
+               
+               
+            );   
+        }else {
+            return (
+                <View style={{flex:1}}>
+                    <Text>asd</Text>
+                    </View>
+            )
+        }
+     
 
-                <View style={[styles.slide3, {backgroundColor: SLIDE_DATA[2].color}, {flexDirection: 'column'}]}>
-                    <Animated.View style={{transform:[{translateX: this.translateX}]}}>
-                    <Text style={styles.text}>{t("select location")}</Text>
-                    </Animated.View>
-                    <Animated.View style={{width: 200, height:40, marginTop: 20,
-                     transform: [{scale: this.springValue}, {translateX: this.translateX}]}}>
-                      <Button
-                      onPress={this.translateOut}
-                      childrenStyle={{color: '#FFFFFF'}}
-                      customStyle={{backgroundColor: '#6ec6ff'}}
-                      >OK!</Button>
-                    </Animated.View>
-                   
-                </View>
-            </Swiper>           
-        );
+        if(Platform.OS === 'ios'){
+            return(
+                <Swiper 
+                loadMinimal={true}
+                dotColor="#90CAF9"
+                activeDotColor="#E3F2FD"
+                loop={false}
+                style={styles.wrapper}>
+                    <View key="1" style={ [styles.slide1, {backgroundColor: SLIDE_DATA[0].color}] }>
+                        <Text style={styles.text}>{t("welcome")}</Text>
+                    </View>
+        
+                    <View key="2" style={[styles.slide2, {backgroundColor: SLIDE_DATA[1].color}]}>
+                        <Text style={styles.text}>{t("use this app for")}</Text>
+                    </View>
+        
+                    <View  key="3" style={[styles.slide3, {backgroundColor: SLIDE_DATA[2].color}, {flexDirection: 'column'}]}>
+                        <Animated.View style={{transform:[{translateX: this.translateX}]}}>
+                        <Text style={styles.text}>{t("select location")}</Text>
+                        </Animated.View>
+                        <Animated.View style={{width: 200, height:40, marginTop: 20,
+                         transform: [{scale: this.springValue}, {translateX: this.translateX}]}}>
+                          <Button
+                          onPress={this.translateOut}
+                          childrenStyle={{color: '#FFFFFF'}}
+                          customStyle={{backgroundColor: '#6ec6ff'}}
+                          >OK!</Button>
+                        </Animated.View>
+                       
+                    </View>
+                </Swiper>      
+            );
+        }else {
+            return(
+                <ViewPagerAndroid            
+                initialPage={0}
+                style={[styles.wrapper,{flex:1}]}>
+    
+                    <View key="1" style={ [styles.slide1, {backgroundColor: SLIDE_DATA[0].color}] }>
+                        <Text style={styles.text}>{t("welcome")}</Text>
+                    </View>
+    
+                    <View key="2" style={[styles.slide2, {backgroundColor: SLIDE_DATA[1].color}]}>
+                        <Text style={styles.text}>{t("use this app for")}</Text>
+                    </View>
+    
+                    <View  key="3" style={[styles.slide3, {backgroundColor: SLIDE_DATA[2].color}, {flexDirection: 'column'}]}>
+                        <Animated.View style={{transform:[{translateX: this.translateX}]}}>
+                        <Text style={styles.text}>{t("select location")}</Text>
+                        </Animated.View>
+                        <Animated.View style={{width: 200, height:40, marginTop: 20,
+                         transform: [{scale: this.springValue}, {translateX: this.translateX}]}}>
+                          <Button
+                          onPress={this.translateOut}
+                          childrenStyle={{color: '#FFFFFF'}}
+                          customStyle={{backgroundColor: '#6ec6ff'}}
+                          >OK!</Button>
+                        </Animated.View>
+                       
+                    </View>
+                </ViewPagerAndroid>
+               
+            );
+        }
+
+       
     }
 }
 
