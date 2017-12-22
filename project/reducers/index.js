@@ -4,11 +4,13 @@ import jobs from './jobs_reducer';
 import likedJobs from './likes_reducer';
 import location from './geolocation_reducer';
 import placesData from './places_reducer';
+import register from './register_reducer';
 
 export default ({
   auth, 
   jobs, 
   likedJobs,
   location,
-  placesData
+  placesData,
+  register
 });

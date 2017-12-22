@@ -6,3 +6,6 @@ export const CLEAR_LIKED_JOBS = 'clear_liked_jobs';
 export const NEW_LOCATION = 'new_location';
 export const LOCATION_PERMISSION_DENIED = 'location_denied';
 export const NEW_PLACES = 'new_places';
+export const REGISTER_EMAIL_CHANGE = 'register_email_changed';
+export const REGISTER_PASSWORD_CHANGE= 'register_password_changed'
+export const REGISTER_VERIFY_PW_CHANGE = 'register_verify_pw';

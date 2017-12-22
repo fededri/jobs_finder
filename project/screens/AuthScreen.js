@@ -1,5 +1,11 @@
 import React,{Component} from 'react';
-import {View, Text, AsyncStorage,Image,Animated, Easing,LayoutAnimation,UIManager} from 'react-native';
+import {View, Text, AsyncStorage,
+    Image,Animated, 
+    Easing,
+    LayoutAnimation,
+    UIManager,
+    PanResponder
+} from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../actions';
 import {Icon,SocialIcon,Divider} from 'react-native-elements';
@@ -10,15 +16,24 @@ import CustomLayoutSpring from '../animations/CustomLayoutSpring';
 
 class AuthScreen extends Component {
 
+
+    static navigationOptions = { 
+       header: null        
+    }
+
     constructor(props){
         super(props);
         this.alphaValue = new Animated.Value(0);
         this.springValue = new Animated.Value(0);
+        this.rotateValue= new Animated.Value(0);
+       
+
         UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
     }
 
     async componentDidMount(){
         this.animateButtons();
+        this.rotateAnimation();
     /*let fb_token =  await AsyncStorage.getItem('fb_token');
 
     if(fb_token){
@@ -55,16 +70,57 @@ class AuthScreen extends Component {
 
     }
 
+
+    rotateAnimation = () => {
+            this.rotateValue.setValue(0);
+            Animated.timing(
+                this.rotateValue,
+                {
+                    toValue: 1,
+                    duration: 6000,
+                    easing: Easing.linear
+                }
+            ).start(()=> this.rotateAnimation())        
+      
+    }
+
+
+    launchRegister  = () => {
+        const {navigate} = this.props.navigation;
+        navigate('register');
+    }
+
     render(){
-    LayoutAnimation.spring();
+    
+
+    const rotate = this.rotateValue.interpolate({
+        inputRange: [0,1],
+        outputRange: ['0deg','-360deg']
+    });
+
+
+    const rotateDown = this.rotateValue.interpolate({
+        inputRange: [0,1],
+        outputRange: ['0deg','360deg']
+    })
         return(
             <View
             style={styles.rootStyle}
             >
+
+
                 <View    style={styles.logoStyle}>
-                    <Image  
-                    style={styles.imageStyle}               
+
+                    <Animated.Image  
+                    resizeMode='contain'
+                    style={[styles.imageStyle, {transform: [{rotate}]}]}               
+                    source={require('../assets/wheel.png')}
+                    /> 
                     
+                    <Animated.Image  
+                    resizeMode='contain'
+                    style={[styles.imageStyle, {marginRight: 47,marginTop: -12},  {transform: [{ rotate: rotateDown}]} ]}               
+                    source={require('../assets/wheel.png')}
                     /> 
                 </View>
               
@@ -87,7 +143,7 @@ class AuthScreen extends Component {
                     <Animated.View style={[styles.mailContainerStyle,
                          {marginLeft: this.springValue, marginRight: this.springValue, marginTop: this.springValue}]}>
                         <Button
-                        onPress={this.animateButtons}
+                        onPress={this.launchRegister}
                         icon="email"
                         iconColor="#FFFFFF"
                         customStyle={styles.mailStyle}
@@ -118,6 +174,7 @@ const styles = {
         backgroundColor: '#C5CAE9'
     },
     logoStyle:{
+        marginTop:20,
         flex:1,
         justifyContent: 'center',
         alignItems:'center'  
