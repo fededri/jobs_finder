@@ -114,13 +114,13 @@ class AuthScreen extends Component {
                     <Animated.Image  
                     resizeMode='contain'
                     style={[styles.imageStyle, {transform: [{rotate}]}]}               
-                    source={require('../assets/wheel.png')}
+                    source={require('../assets/settings-work-tool.png')}
                     /> 
                     
                     <Animated.Image  
                     resizeMode='contain'
-                    style={[styles.imageStyle, {marginRight: 47,marginTop: -12},  {transform: [{ rotate: rotateDown}]} ]}               
-                    source={require('../assets/wheel.png')}
+                    style={[styles.imageStyle, {width: 100, height: 100,marginRight: 47,marginTop: -45},  {transform: [{ rotate: rotateDown}]} ]}               
+                    source={require('../assets/settings-work-tool.png')}
                     /> 
                 </View>
               

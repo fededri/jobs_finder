@@ -10,6 +10,8 @@ import {AppLoading} from 'expo';
 import Swiper from 'react-native-swiper';
 import {t} from '../Strings';
 import Button from '../components/common/Button';
+import WelcomeComponent from '../components/WelcomeComponent';
+
 
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -30,6 +32,7 @@ class WelcomeScreen extends Component {
         
         this.springValue = new Animated.Value(0.8);
         this.translateX = new Animated.Value(0);
+        this.topPosition1 = new Animated.Value(0);
         this.state = {
             visibleSwiper: false
          };
@@ -102,9 +105,35 @@ class WelcomeScreen extends Component {
 
 
 
+    onSwiperIndexChanged = (index) => {
+        switch (index) {
+            case 0:
+                console.log('swipe index 0');
+                break;
+
+            case 1:
+            this.topPosition1.setValue(0);
+                Animated.spring(this.topPosition1,{
+                    toValue: (SCREEN_HEIGHT / 2) -20,
+                    mass: 2
+
+                }).start();
+                break;
+
+            case 2:
+                
+                break;
+        
+            default:
+                break;
+        }
+    }
+
 
     render(){
         LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
+       
+       
         if(this.state.visibleSwiper){
             return(
                
@@ -113,14 +142,21 @@ class WelcomeScreen extends Component {
                 loadMinimal={true}
                 dotColor="#90CAF9"
                 activeDotColor="#E3F2FD"
+                onIndexChanged={this.onSwiperIndexChanged}
                 loop={false}>
                     <View key="1" style={ [styles.slide1, {backgroundColor: SLIDE_DATA[0].color}] }>
-                        <Text style={styles.text}>{t("welcome")}</Text>
+                       <WelcomeComponent
+                       text={t("welcome")}
+                       />
                     </View>
         
-                    <View key="2" style={[styles.slide2, {backgroundColor: SLIDE_DATA[1].color}]}>
-                        <Text style={styles.text}>{t("use this app for")}</Text>
-                    </View>
+                    <Animated.View key="2" style={[styles.slide2, {backgroundColor: SLIDE_DATA[1].color},
+                        ]}>
+                        <Animated.Text style={[styles.text,
+                               {transform: [{translateY: this.topPosition1} ]}]}>
+                               {t("use this app for")}
+                        </Animated.Text>
+                    </Animated.View>
         
                     <View  key="3" style={[styles.slide3, {backgroundColor: SLIDE_DATA[2].color}, {flexDirection: 'column'}]}>
                         <Animated.View style={{transform:[{translateX: this.translateX}]}}>
@@ -145,78 +181,10 @@ class WelcomeScreen extends Component {
         }else {
             return (
                 <View style={{flex:1}}>
-                    <Text>asd</Text>
+                    <Text>Loading</Text>
                     </View>
             )
-        }
-     
-
-        if(Platform.OS === 'ios'){
-            return(
-                <Swiper 
-                loadMinimal={true}
-                dotColor="#90CAF9"
-                activeDotColor="#E3F2FD"
-                loop={false}
-                style={styles.wrapper}>
-                    <View key="1" style={ [styles.slide1, {backgroundColor: SLIDE_DATA[0].color}] }>
-                        <Text style={styles.text}>{t("welcome")}</Text>
-                    </View>
-        
-                    <View key="2" style={[styles.slide2, {backgroundColor: SLIDE_DATA[1].color}]}>
-                        <Text style={styles.text}>{t("use this app for")}</Text>
-                    </View>
-        
-                    <View  key="3" style={[styles.slide3, {backgroundColor: SLIDE_DATA[2].color}, {flexDirection: 'column'}]}>
-                        <Animated.View style={{transform:[{translateX: this.translateX}]}}>
-                        <Text style={styles.text}>{t("select location")}</Text>
-                        </Animated.View>
-                        <Animated.View style={{width: 200, height:40, marginTop: 20,
-                         transform: [{scale: this.springValue}, {translateX: this.translateX}]}}>
-                          <Button
-                          onPress={this.translateOut}
-                          childrenStyle={{color: '#FFFFFF'}}
-                          customStyle={{backgroundColor: '#6ec6ff'}}
-                          >OK!</Button>
-                        </Animated.View>
-                       
-                    </View>
-                </Swiper>      
-            );
-        }else {
-            return(
-                <ViewPagerAndroid            
-                initialPage={0}
-                style={[styles.wrapper,{flex:1}]}>
-    
-                    <View key="1" style={ [styles.slide1, {backgroundColor: SLIDE_DATA[0].color}] }>
-                        <Text style={styles.text}>{t("welcome")}</Text>
-                    </View>
-    
-                    <View key="2" style={[styles.slide2, {backgroundColor: SLIDE_DATA[1].color}]}>
-                        <Text style={styles.text}>{t("use this app for")}</Text>
-                    </View>
-    
-                    <View  key="3" style={[styles.slide3, {backgroundColor: SLIDE_DATA[2].color}, {flexDirection: 'column'}]}>
-                        <Animated.View style={{transform:[{translateX: this.translateX}]}}>
-                        <Text style={styles.text}>{t("select location")}</Text>
-                        </Animated.View>
-                        <Animated.View style={{width: 200, height:40, marginTop: 20,
-                         transform: [{scale: this.springValue}, {translateX: this.translateX}]}}>
-                          <Button
-                          onPress={this.translateOut}
-                          childrenStyle={{color: '#FFFFFF'}}
-                          customStyle={{backgroundColor: '#6ec6ff'}}
-                          >OK!</Button>
-                        </Animated.View>
-                       
-                    </View>
-                </ViewPagerAndroid>
-               
-            );
-        }
-
-       
+        }       
     }
 }
 
@@ -225,12 +193,10 @@ styles = {
     },
     slide1: {
       flex: 1,
-      justifyContent: 'center',
       alignItems: 'center'
     },
     slide2: {
       flex: 1,
-      justifyContent: 'center',
       alignItems: 'center'
     },
     slide3: {
