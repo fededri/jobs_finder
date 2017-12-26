@@ -1,13 +1,16 @@
 import {
     REGISTER_EMAIL_CHANGE,
     REGISTER_PASSWORD_CHANGE,
-    REGISTER_VERIFY_PW_CHANGE
+    REGISTER_VERIFY_PW_CHANGE,
+    REGISTER,
+    REGISTER_LOADING
 }from '../actions/types';
 
 const INITIAL_STATE  = {
     email: '',
     password: '',
-    passwordMatches: false
+    passwordMatches: false,
+    loading: false
 }
 
 export default function (state = INITIAL_STATE, action){
@@ -20,6 +23,10 @@ export default function (state = INITIAL_STATE, action){
 
         case REGISTER_VERIFY_PW_CHANGE:
         return {...state, passwordMatches: state.password === action.payload}
+
+        case REGISTER_LOADING:
+        console.log('register loading')
+        return {...state,loading: true}
 
         default:
             return state;

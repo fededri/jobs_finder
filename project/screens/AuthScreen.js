@@ -4,7 +4,8 @@ import {View, Text, AsyncStorage,
     Easing,
     LayoutAnimation,
     UIManager,
-    PanResponder
+    PanResponder,
+    Dimensions
 } from 'react-native';
 import {connect} from 'react-redux';
 import * as actions from '../actions';
@@ -13,6 +14,7 @@ import {t} from '../Strings';
 import Button from '../components/common/Button';
 import CustomLayoutSpring from '../animations/CustomLayoutSpring';
 
+const width = Dimensions.get('window').width;
 
 class AuthScreen extends Component {
 
@@ -101,7 +103,12 @@ class AuthScreen extends Component {
 
     const rotateDown = this.rotateValue.interpolate({
         inputRange: [0,1],
-        outputRange: ['0deg','360deg']
+        outputRange: ['0deg','720deg']
+    })
+
+    const rotateFast = this.rotateValue.interpolate({
+        inputRange: [0,1],
+        outputRange: ['0deg','-1080deg']
     })
         return(
             <View
@@ -113,15 +120,26 @@ class AuthScreen extends Component {
 
                     <Animated.Image  
                     resizeMode='contain'
-                    style={[styles.imageStyle, {transform: [{rotate}]}]}               
+                    style={[styles.imageStyle, {marginBottom:5, transform: [{rotate}]}]}               
                     source={require('../assets/settings-work-tool.png')}
                     /> 
                     
-                    <Animated.Image  
-                    resizeMode='contain'
-                    style={[styles.imageStyle, {width: 100, height: 100,marginRight: 47,marginTop: -45},  {transform: [{ rotate: rotateDown}]} ]}               
-                    source={require('../assets/settings-work-tool.png')}
-                    /> 
+
+                    <View style={{flexDirection: 'row'}}>
+                        <Animated.Image  
+                        resizeMode='contain'
+                        style={[styles.imageStyle, {width: 75, height: 75,marginRight: 35,marginTop: -105},  {transform: [{ rotate: rotateDown}]} ]}               
+                        source={require('../assets/settings-work-tool.png')}
+                        /> 
+
+                        <Animated.Image  
+                        resizeMode='contain'
+                        style={[styles.imageStyle, {width: 35, height: 35, position: 'absolute', right: width/2 -52, top:-80},  {transform: [{ rotate:rotateFast}]} ]}               
+                        source={require('../assets/settings-work-tool.png')}
+                        /> 
+
+                    </View>
+                  
                 </View>
               
 
@@ -181,8 +199,8 @@ const styles = {
     },
     imageStyle:{
         flex:1,
-        width: 200,
-        height:200
+        width: 120,
+        height:120
     },
     loginStyle:{
         flex:1,

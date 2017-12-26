@@ -2,7 +2,8 @@ import React,{Component} from 'react';
 import {View, Text,AsyncStorage,Platform,Animated,Dimensions,
     ViewPagerAndroid,
      UIManager,
-     LayoutAnimation
+     LayoutAnimation,
+     ActivityIndicator
     } from 'react-native';
 import Slides from '../components/Slides'
 import _ from 'lodash';
@@ -32,9 +33,9 @@ class WelcomeScreen extends Component {
         
         this.springValue = new Animated.Value(0.8);
         this.translateX = new Animated.Value(0);
-        this.topPosition1 = new Animated.Value(0);
         this.state = {
-            visibleSwiper: false
+            visibleSwiper: false,
+            index: 0
          };
    
     }
@@ -93,7 +94,6 @@ class WelcomeScreen extends Component {
     }
 
     onSlidesComplete = () =>{ 
-        console.log('clic');
         const {navigate} = this.props.navigation;
         navigate('auth');
     }
@@ -105,23 +105,19 @@ class WelcomeScreen extends Component {
 
 
 
-    onSwiperIndexChanged = (index) => {
+    onSwiperIndexChanged = (index) => {           
+        
         switch (index) {
             case 0:
-                console.log('swipe index 0');
+                this.w1.animate();
                 break;
 
             case 1:
-            this.topPosition1.setValue(0);
-                Animated.spring(this.topPosition1,{
-                    toValue: (SCREEN_HEIGHT / 2) -20,
-                    mass: 2
-
-                }).start();
+            this.w2.animate();
                 break;
 
             case 2:
-                
+            this.w3.animate();
                 break;
         
             default:
@@ -141,37 +137,38 @@ class WelcomeScreen extends Component {
                 height={SCREEN_HEIGHT}
                 loadMinimal={true}
                 dotColor="#90CAF9"
-                activeDotColor="#E3F2FD"
+                loop={false}
                 onIndexChanged={this.onSwiperIndexChanged}
-                loop={false}>
+                activeDotColor="#E3F2FD">
                     <View key="1" style={ [styles.slide1, {backgroundColor: SLIDE_DATA[0].color}] }>
                        <WelcomeComponent
+                       textStyle={styles.text}
                        text={t("welcome")}
+                       ref={(comp)=> {this.w1 = comp}}
                        />
                     </View>
         
-                    <Animated.View key="2" style={[styles.slide2, {backgroundColor: SLIDE_DATA[1].color},
+                    <View key="2" style={[styles.slide2, {backgroundColor: SLIDE_DATA[1].color},
                         ]}>
-                        <Animated.Text style={[styles.text,
-                               {transform: [{translateY: this.topPosition1} ]}]}>
-                               {t("use this app for")}
-                        </Animated.Text>
-                    </Animated.View>
-        
-                    <View  key="3" style={[styles.slide3, {backgroundColor: SLIDE_DATA[2].color}, {flexDirection: 'column'}]}>
-                        <Animated.View style={{transform:[{translateX: this.translateX}]}}>
-                        <Text style={styles.text}>{t("select location")}</Text>
-                        </Animated.View>
-                        <Animated.View style={{width: 200, height:40, marginTop: 20,
-                         transform: [{scale: this.springValue}, {translateX: this.translateX}]}}>
-                          <Button
-                          onPress={this.translateOut}
-                          childrenStyle={{color: '#FFFFFF'}}
-                          customStyle={{backgroundColor: '#6ec6ff'}}
-                          >OK!</Button>
-                        </Animated.View>
-                       
+                        <WelcomeComponent
+                        textStyle={styles.text}
+                        ref={(comp)=> {this.w2 = comp}}
+                        text={t("use this app for")}
+                       />
                     </View>
+        
+                    <Animated.View  key="3"
+                     style={[styles.slide3, {backgroundColor: SLIDE_DATA[2].color}, {flexDirection: 'column'},
+                            {transform: [{translateX: this.translateX}]}
+                    ]}>                           
+                                <WelcomeComponent
+                                textStyle={styles.text}
+                                ref={(comp)=> {this.w3 = comp}}
+                                text={t("select location")}
+                                showButton={true}             
+                                onPress={this.translateOut}           
+                                />                                      
+                    </Animated.View>
                 </Swiper>    
         
             
@@ -180,8 +177,11 @@ class WelcomeScreen extends Component {
             );   
         }else {
             return (
-                <View style={{flex:1}}>
-                    <Text>Loading</Text>
+                <View style={{flex:1, justifyContent: 'center', alignItems:'center'}}>
+                   <ActivityIndicator
+                    size={'large'}
+                    color="#FF0000"
+                    animating={true} />
                     </View>
             )
         }       
@@ -201,7 +201,6 @@ styles = {
     },
     slide3: {
       flex: 1,
-      justifyContent: 'center',
       alignItems: 'center'
     },
     text: {

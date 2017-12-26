@@ -16,23 +16,30 @@ class RegisterScreen extends Component{
     static navigationOptions = { 
         title: t('register'),
         headerTitleStyle: {alignSelf: 'center',textAlign: 'center'},
-        headerRight: (<View></View>)
-        
+        headerRight: (<View></View>)       
        
     }
 
 
 
     onRegisterClick = () => {
-
+        this.props.registerLoading();
     }
 
+
+    emailChanged = (email) => {
+        this.props.emailChanged(email);
+    }
+
+    passwordChanged = (pass) => {
+        this.props.passwordChanged(pass);
+    }
 
 
     onConfirmPassChange = (pass) => {
-        console.log('asd');
         this.props.passwordCheckChanged(pass);
     }
+
 
     render(){
         return(
@@ -72,7 +79,7 @@ class RegisterScreen extends Component{
             style={{height: 40, margin:20}}
             >
                 <Button      
-                onPress={() => {console.log('asd')}}      
+                onPress={this.onRegisterClick}      
                 childrenStyle={{color: '#FFFFFF'}}
                 customStyle={styles.buttonStyle}
                 >
@@ -86,7 +93,7 @@ class RegisterScreen extends Component{
             <ActivityIndicator
             size={'large'}
             color="#FF0000"
-            animating={true} />
+            animating={this.props.loading} />
             </View>
             
            
@@ -120,11 +127,12 @@ const styles ={
 };
 
 function mapStateToProps({register}){
- 
+    debugger
     return {
         email: register.email,
         password: register.password,
-        passwordMatches: register.passwordMatches
+        passwordMatches: register.passwordMatches,
+        loading: register.loading
     }
 }
 

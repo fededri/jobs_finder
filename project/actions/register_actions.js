@@ -4,7 +4,9 @@ import {getlanguageCode} from '../utils/locale';
 import {
     REGISTER_EMAIL_CHANGE,
     REGISTER_PASSWORD_CHANGE,
-    REGISTER_VERIFY_PW_CHANGE
+    REGISTER_VERIFY_PW_CHANGE,
+    REGISTER,
+    REGISTER_LOADING
 } from './types';
 
 const TAG = 'RegisterActions';
@@ -29,6 +31,13 @@ export const passwordCheckChanged = (password) => {
         type: REGISTER_VERIFY_PW_CHANGE,
         payload: password
     };
+}
+
+
+export const registerLoading = () => {
+   return {
+       type: REGISTER_LOADING
+   }
 }
 
 

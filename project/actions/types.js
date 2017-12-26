@@ -9,3 +9,5 @@ export const NEW_PLACES = 'new_places';
 export const REGISTER_EMAIL_CHANGE = 'register_email_changed';
 export const REGISTER_PASSWORD_CHANGE= 'register_password_changed'
 export const REGISTER_VERIFY_PW_CHANGE = 'register_verify_pw';
+export const REGISTER = 'register';
+export const REGISTER_LOADING = 'register_loading';

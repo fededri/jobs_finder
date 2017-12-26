@@ -1,5 +1,6 @@
 import React,{Component} from 'react';
 import {View,Text, Animated, Platform, Dimensions} from 'react-native';
+import Button from './common/Button';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
@@ -8,6 +9,7 @@ class WelcomeComponent extends Component{
     constructor(props){
         super(props);
         this.springValue = new Animated.Value(0);
+        this.buttonScaleValue = new Animated.Value(0);
     }
 
 
@@ -15,18 +17,50 @@ class WelcomeComponent extends Component{
         this.springValue.setValue(0);
         Animated.spring(this.springValue,{
             toValue: SCREEN_HEIGHT /2,
-            mass: 2
+            mass: 1
         }).start()
     }
 
+
+    renderButton  = (showButton) => {
+        
+        if(showButton){
+            return (
+                <View style={{width: 200, height:40, marginTop: 20, justifyContent: 'center'
+                     }}>
+                         <Button                       
+                         onPress={this.props.onPress}          
+                         childrenStyle={{color: '#FFFFFF'}}
+                         customStyle={{backgroundColor: '#6ec6ff'}}
+                         >OK!
+                         </Button>
+                 </View>
+                );
+        }      
+    }
+
+    animate() {
+        this.springValue.setValue(0);
+        Animated.spring(this.springValue,{
+            toValue: SCREEN_HEIGHT /2,
+            mass: 1
+        }).start()
+    }
+
+
+
     render(){
-    const {style,text} = this.props;
+    const {text,textStyle} = this.props;
+
         return(
-            <Animated.View
-            style={{transform: [ {translateY: this.springValue} ] }}
-            >
-                <Text style={styles.textStyle}> {text} </Text>
-            </Animated.View>
+            <View>
+                <Animated.View
+                    style={[{alignItems: 'center'}, {transform: [ {translateY: this.springValue} ] }]}>
+                          <Text style={textStyle}> {text} </Text>
+                          {this.renderButton(this.props.showButton)}
+                 </Animated.View>
+            </View>
+          
         );
     }
 }
