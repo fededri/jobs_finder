@@ -121,7 +121,7 @@ class AuthScreen extends Component {
                     <Animated.Image  
                     resizeMode='contain'
                     style={[styles.imageStyle, {marginBottom:5, transform: [{rotate}]}]}               
-                    source={require('../assets/settings-work-tool.png')}
+                    source={require('../assets/ic_settings.png')}
                     /> 
                     
 
@@ -129,13 +129,13 @@ class AuthScreen extends Component {
                         <Animated.Image  
                         resizeMode='contain'
                         style={[styles.imageStyle, {width: 75, height: 75,marginRight: 35,marginTop: -105},  {transform: [{ rotate: rotateDown}]} ]}               
-                        source={require('../assets/settings-work-tool.png')}
+                        source={require('../assets/ic_settings.png')}
                         /> 
 
                         <Animated.Image  
                         resizeMode='contain'
                         style={[styles.imageStyle, {width: 35, height: 35, position: 'absolute', right: width/2 -52, top:-80},  {transform: [{ rotate:rotateFast}]} ]}               
-                        source={require('../assets/settings-work-tool.png')}
+                        source={require('../assets/ic_settings.png')}
                         /> 
 
                     </View>
