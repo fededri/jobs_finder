@@ -6,8 +6,11 @@ import {
     REGISTER_PASSWORD_CHANGE,
     REGISTER_VERIFY_PW_CHANGE,
     REGISTER,
-    REGISTER_LOADING
+    REGISTER_LOADING,
+    REGISTER_ERROR,
+    REGISTER_CLEAR_ERRORS
 } from './types';
+import * as firebase from 'firebase'
 
 const TAG = 'RegisterActions';
 
@@ -35,9 +38,37 @@ export const passwordCheckChanged = (password) => {
 
 
 export const registerLoading = () => {
+    console.log('Dispatching REGISTER_LOADING action');
    return {
        type: REGISTER_LOADING
    }
+}
+
+
+export const register = (email, password) =>async (dispatch) => {
+    console.log('Dispatcing register action')
+    try{
+        let response =  await firebase.auth().createUserWithEmailAndPassword(email,password);
+        console.log(`user registered, response: ${JSON.stringify(response)}`)
+        dispatch({type: REGISTER, payload: response})
+        
+    }catch(err){
+        console.log(`error ${err}`)
+        dispatch({type: REGISTER_ERROR, payload: err})
+        
+    }
+
+
+    
+    
+};
+
+
+export const clearErrors  = () => {
+    
+    return {
+        type: REGISTER_CLEAR_ERRORS
+    }
 }
 
 

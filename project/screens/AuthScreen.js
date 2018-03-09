@@ -128,7 +128,7 @@ class AuthScreen extends Component {
                     <View style={{flexDirection: 'row'}}>
                         <Animated.Image  
                         resizeMode='contain'
-                        style={[styles.imageStyle, {width: 75, height: 75,marginRight: 35,marginTop: -105},  {transform: [{ rotate: rotateDown}]} ]}               
+                        style={[styles.imageStyle, {width: 75, height: 75,marginRight: 35,marginTop: -95},  {transform: [{ rotate: rotateDown}]} ]}               
                         source={require('../assets/settings-work-tool.png')}
                         /> 
 

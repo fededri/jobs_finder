@@ -11,3 +11,5 @@ export const REGISTER_PASSWORD_CHANGE= 'register_password_changed'
 export const REGISTER_VERIFY_PW_CHANGE = 'register_verify_pw';
 export const REGISTER = 'register';
 export const REGISTER_LOADING = 'register_loading';
+export const REGISTER_ERROR = 'register_error';
+export const REGISTER_CLEAR_ERRORS = 'register_clear';

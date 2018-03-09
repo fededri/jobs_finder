@@ -11,6 +11,7 @@ export default function(state={},action){
         case FACEBOOK_LOGIN_FAIL:
         return {token: null};
 
+
         default:
         return state;
     }

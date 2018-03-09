@@ -1,5 +1,10 @@
 import React,{Component} from 'react';
-import {Text,View,TextInput,ActivityIndicator} from 'react-native';
+import {Text,View,
+    TextInput,
+    ActivityIndicator, 
+    Alert,
+    Keyboard
+} from 'react-native';
 import {t} from '../Strings';
 import {TextInputLayout} from 'rn-textinputlayout';
 import Button from '../components/common/Button';
@@ -12,6 +17,7 @@ const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"
 class RegisterScreen extends Component{
 
     
+   
 
     static navigationOptions = { 
         title: t('register'),
@@ -23,21 +29,41 @@ class RegisterScreen extends Component{
 
 
     onRegisterClick = () => {
-        this.props.registerLoading();
+        Keyboard.dismiss();
+        const {email, password, password2} = this.state;
+        
+        if(password == password2){
+            this.props.registerLoading();
+            this.props.register(this.state.email,this.state.password);
+        }else {
+            Alert.alert(
+                'Registro',
+                'las contraseñas no coinciden',
+            )
+        }
+
+        
     }
-
-
-    emailChanged = (email) => {
-        this.props.emailChanged(email);
-    }
-
-    passwordChanged = (pass) => {
-        this.props.passwordChanged(pass);
-    }
-
 
     onConfirmPassChange = (pass) => {
         this.props.passwordCheckChanged(pass);
+    }
+
+
+    componentWillReceiveProps(newProps){
+        if(newProps.error){
+            Alert.alert(
+                'Sirch',
+                JSON.stringify(newProps.errorMessage)
+            )
+            this.props.clearErrors();
+        }else {
+            if(newProps.user && newProps.user.uid){
+                newProps.navigation.navigate('main');
+            }
+        }
+
+        
     }
 
 
@@ -49,7 +75,7 @@ class RegisterScreen extends Component{
                 checkValid={t => EMAIL_REGEX.test(t)}
             >
                 <TextInput
-                    onChange={(email) => {this.emailChanged(email)}}
+                    onChangeText = {email => this.setState({email})}
                     style={styles.textInput}
                     placeholder={'Email'}
                 />
@@ -58,7 +84,7 @@ class RegisterScreen extends Component{
 
             <TextInputLayout  style={styles.inputLayout}>
                 <TextInput   
-                    onChange={(pass) => {this.passwordChanged(pass)}}
+                    onChangeText =  {password => this.setState({password})}
                     style={styles.textInput}
                     placeholder={'Password'}
                     secureTextEntry={true}
@@ -68,7 +94,7 @@ class RegisterScreen extends Component{
 
             <TextInputLayout  style={styles.inputLayout}>
                 <TextInput                
-                    onChange={(pass) => {this.onConfirmPassChange(pass)}}
+                    onChangeText = {password2 => this.setState({password2})}
                     style={styles.textInput}
                     placeholder={'Confirm password'}
                     secureTextEntry={true}
@@ -90,10 +116,14 @@ class RegisterScreen extends Component{
             <View
             style={{flex:1,justifyContent:'center', alignItems:'center'}}
             >
-            <ActivityIndicator
-            size={'large'}
-            color="#FF0000"
-            animating={this.props.loading} />
+
+
+            {this.props.loading &&
+                <ActivityIndicator
+                size={'large'}
+                color="#FF0000"
+                animating={true} />
+            }
             </View>
             
            
@@ -126,13 +156,12 @@ const styles ={
     }
 };
 
-function mapStateToProps({register}){
-    debugger
+function mapStateToProps(state){
     return {
-        email: register.email,
-        password: register.password,
-        passwordMatches: register.passwordMatches,
-        loading: register.loading
+        user : state.user,
+        loading: state.register.loading,
+        error: state.register.error,
+        errorMessage: state.register.errorMessage
     }
 }
 

@@ -15,7 +15,9 @@ import registerForNotifications from './services/push_notifications';
 import Expo, {Notifications} from 'expo';
 import {getlanguageCode} from './utils/locale';
 import {setCurrentLanguage} from './Strings';
+import * as firebase from 'firebase'
 export const {persistor,store} = configureStore();
+
 
 export default class App extends React.Component {
 
@@ -35,6 +37,16 @@ export default class App extends React.Component {
      }
      
    });
+
+   var config = {
+    apiKey: "AIzaSyCuKQKkd77A5IqxqfC-2NyNC-3ulWz0-h0",
+    authDomain: "testaudio-312dc.firebaseapp.com",
+    databaseURL: "https://testaudio-312dc.firebaseio.com",
+    projectId: "testaudio-312dc",
+    storageBucket: "testaudio-312dc.appspot.com",
+    messagingSenderId: "955201045122"
+  };
+  firebase.initializeApp(config);
  }
 
 
